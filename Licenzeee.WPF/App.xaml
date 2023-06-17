@@ -1,0 +1,90 @@
+﻿<ninject:PrismApplication x:Class="Fateblade.Licenzeee.WPF.App"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:ninject="http://prismlibrary.com/"
+                  xmlns:wpf="clr-namespace:Fateblade.Licenzeee.WPF"
+                  xmlns:views="clr-namespace:Fateblade.Licenzeee.WPF.Views"
+                  xmlns:converters="clr-namespace:Fateblade.Licenzeee.WPF.Converters"
+                  xmlns:inputs="clr-namespace:Fateblade.Licenzeee.WPF.Inputs"
+                  xmlns:dialogs="clr-namespace:Fateblade.Licenzeee.WPF.Dialogs">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--MahApps-->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+
+
+
+            <!--Templates-->
+            <!--Templates - Views-->
+            <DataTemplate x:Key="Licenzeee.Templates.LicenseViewDataTemplate">
+                <views:LicensesView />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.ProductsViewDataTemplate">
+                <views:ProductsView />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.UsersViewDataTemplate">
+                <views:UsersView />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.OptionsViewDataTemplate">
+                <views:OptionsView />
+            </DataTemplate>
+
+            <!--Templates - Inputs-->
+            <DataTemplate x:Key="Licenzeee.Templates.UserConfirmationTemplate">
+                <inputs:UserConfirmationInput />
+            </DataTemplate>
+
+            <!--Templates - Dialogs-->
+            <DataTemplate x:Key="Licenzeee.Templates.CreateLicenseTemplate">
+                <dialogs:CreateLicenseDialog />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.CreateProductTemplate">
+                <dialogs:CreateProductDialog />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.CreateUserTemplate">
+                <dialogs:CreateUserDialog />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.ModifyLicenseTemplate">
+                <dialogs:CreateLicenseDialog />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.ModifyProductTemplate">
+                <dialogs:CreateProductDialog />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.ModifyUserTemplate">
+                <dialogs:CreateUserDialog />
+            </DataTemplate>
+
+
+
+            <!--Templates - Selectors-->
+            <wpf:DisplayContentTemplateSelector x:Key="Licenzeee.Templates.DisplayContentTemplateSelector" 
+                                                LicenseView="{StaticResource Licenzeee.Templates.LicenseViewDataTemplate}"
+                                                ProductsView="{StaticResource Licenzeee.Templates.ProductsViewDataTemplate}"
+                                                UsersView="{StaticResource Licenzeee.Templates.UsersViewDataTemplate}"
+                                                OptionsView="{StaticResource Licenzeee.Templates.OptionsViewDataTemplate}"
+
+                                                UserConfirmation="{StaticResource Licenzeee.Templates.UserConfirmationTemplate}"
+
+                                                CreateLicenseDialog="{StaticResource Licenzeee.Templates.CreateLicenseTemplate}"
+                                                CreateProductDialog="{StaticResource Licenzeee.Templates.CreateProductTemplate}"
+                                                CreateUserDialog="{StaticResource Licenzeee.Templates.CreateUserTemplate}"
+                                                />
+
+
+
+            <!--Converters-->
+            <converters:ExistenceToBoolConverter x:Key="Licenzeee.Converters.ExistenceToBoolConverter" />
+            <converters:NonExistenceToBoolConverter x:Key="Licenzeee.Converters.NonExistenceToBoolConverter" />
+            <converters:LicensedProductToCombinedInfoString x:Key="Licenzeee.Converters.LicensedProductToCombinedInfoString" />
+            <converters:LicensedProductIdToCombinedInfoString x:Key="Licenzeee.Converters.LicensedProductIdToCombinedInfoString" />
+            <converters:UsageTypeIdMatchToVisibility x:Key="Licenzeee.Converters.UsageTypeIdMatchToVisibility" />
+            <converters:LicenseToUsageInfoString x:Key="Licenzeee.Converters.LicenseToUsageInfoString" />
+        </ResourceDictionary>
+    </Application.Resources>
+</ninject:PrismApplication>

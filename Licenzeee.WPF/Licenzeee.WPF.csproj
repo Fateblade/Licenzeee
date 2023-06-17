@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Fateblade.Licenzeee.WPF</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Dialogs\CreateUserDialogViewModel.cs~RF46efd9.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlackPearl.Controls.Library" Version="2.0.3" />
+    <PackageReference Include="MahApps.Metro" Version="3.0.0-alpha0457" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
+    <PackageReference Include="Prism.Ninject" Version="7.2.0.1422" />
+  </ItemGroup>
+
+</Project>
