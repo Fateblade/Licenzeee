@@ -5,9 +5,9 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
     /// <summary>
     /// Interaction logic for CreateUserDialog.xaml
     /// </summary>
-    public partial class CreateUserDialog : UserControl
+    public partial class UserDialog : UserControl
     {
-        public CreateUserDialog()
+        public UserDialog()
         {
             InitializeComponent();
         }

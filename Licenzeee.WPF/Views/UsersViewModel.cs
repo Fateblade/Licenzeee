@@ -43,7 +43,7 @@ namespace Fateblade.Licenzeee.WPF.Views
         
         public DelegateCommand AddNew { get; }
         public DelegateCommand DeleteSelected { get; }
-
+        public DelegateCommand ModifySelected { get; }
 
         public UsersViewModel(IEventAggregator eventAggregator)
         {

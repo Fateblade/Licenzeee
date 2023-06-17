@@ -3,11 +3,11 @@
 namespace Fateblade.Licenzeee.WPF.Dialogs
 {
     /// <summary>
-    /// Interaction logic for CreateLicenseDialog.xaml
+    /// Interaction logic for CreateLicensedProductDialog.xaml
     /// </summary>
-    public partial class CreateLicenseDialog : UserControl
+    public partial class ProductDialog : UserControl
     {
-        public CreateLicenseDialog()
+        public ProductDialog()
         {
             InitializeComponent();
         }

@@ -42,22 +42,22 @@
 
             <!--Templates - Dialogs-->
             <DataTemplate x:Key="Licenzeee.Templates.CreateLicenseTemplate">
-                <dialogs:CreateLicenseDialog />
+                <dialogs:LicenseDialog />
             </DataTemplate>
             <DataTemplate x:Key="Licenzeee.Templates.CreateProductTemplate">
-                <dialogs:CreateProductDialog />
+                <dialogs:ProductDialog />
             </DataTemplate>
             <DataTemplate x:Key="Licenzeee.Templates.CreateUserTemplate">
-                <dialogs:CreateUserDialog />
+                <dialogs:UserDialog />
             </DataTemplate>
             <DataTemplate x:Key="Licenzeee.Templates.ModifyLicenseTemplate">
-                <dialogs:CreateLicenseDialog />
+                <dialogs:LicenseDialog />
             </DataTemplate>
             <DataTemplate x:Key="Licenzeee.Templates.ModifyProductTemplate">
-                <dialogs:CreateProductDialog />
+                <dialogs:ProductDialog />
             </DataTemplate>
             <DataTemplate x:Key="Licenzeee.Templates.ModifyUserTemplate">
-                <dialogs:CreateUserDialog />
+                <dialogs:UserDialog />
             </DataTemplate>
 
 
@@ -74,6 +74,9 @@
                                                 CreateLicenseDialog="{StaticResource Licenzeee.Templates.CreateLicenseTemplate}"
                                                 CreateProductDialog="{StaticResource Licenzeee.Templates.CreateProductTemplate}"
                                                 CreateUserDialog="{StaticResource Licenzeee.Templates.CreateUserTemplate}"
+                                                ModifyLicenseDialog="{StaticResource Licenzeee.Templates.ModifyLicenseTemplate}"
+                                                ModifyProductDialog="{StaticResource Licenzeee.Templates.ModifyProductTemplate}"
+                                                ModifyUserDialog="{StaticResource Licenzeee.Templates.ModifyUserTemplate}"
                                                 />
 
 

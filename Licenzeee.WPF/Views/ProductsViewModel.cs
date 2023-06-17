@@ -40,8 +40,9 @@ namespace Fateblade.Licenzeee.WPF.Views
             set => SetProperty(ref _filterText, value, filter);
         }
 
-        public DelegateCommand AddNew { get; set; }
-        public DelegateCommand DeleteSelected { get; set; }
+        public DelegateCommand AddNew { get; }
+        public DelegateCommand DeleteSelected { get; }
+        public DelegateCommand ModifySelected { get; }
 
         public ProductsViewModel(IEventAggregator eventAggregator)
         {

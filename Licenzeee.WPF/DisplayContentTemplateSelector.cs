@@ -42,6 +42,9 @@ namespace Fateblade.Licenzeee.WPF
                 CreateLicenseDialogViewModel => CreateLicenseDialog,
                 CreateProductDialogViewModel => CreateProductDialog,
                 CreateUserDialogViewModel => CreateUserDialog,
+                ModifyLicenseDialogViewModel => ModifyLicenseDialog,
+                ModifyProductDialogViewModel => ModifyProductDialog,
+                ModifyUserDialogViewModel => ModifyUserDialog,
 
                 _ => base.SelectTemplate(item, container)
             };

@@ -5,49 +5,26 @@ using Prism.Events;
 
 namespace Fateblade.Licenzeee.WPF.Dialogs
 {
-    class CreateUserDialogViewModel : DialogBindableBase
+    class CreateUserDialogViewModel : UserDialogBaseViewModel
     {
-        private readonly ShowCreateDialog<User> _dialogInfo;
-
-
-        private string _Name;
-        public string Name
-        {
-            get => _Name;
-            set => SetProperty(ref _Name, value);
-        }
-
-        private string _Comment;
-        public string Comment
-        {
-            get => _Comment;
-            set => SetProperty(ref _Comment, value);
-        }
-
-        public DelegateCommand Create { get; }
-        public DelegateCommand Abort { get; }
-
-
         public CreateUserDialogViewModel(IEventAggregator eventAggregator, ShowCreateDialog<User> dialogInfo) 
             : base(eventAggregator, dialogInfo)
         {
-            _dialogInfo = dialogInfo;
-
-            Create = new DelegateCommand(
+            Confirm = new DelegateCommand(
                     () =>
                     {
                         var createdUser = Db.Instance.CreateUser(Name, Comment);
 
                         CloseDialog();
-                        _dialogInfo.CreationCompletedCallback(createdUser);
+                        dialogInfo.CompletedCallback(createdUser);
                     },
-                    () => !string.IsNullOrWhiteSpace(_Name))
+                    () => !string.IsNullOrWhiteSpace(Name))
                 .ObservesProperty(() => Name);
 
             Abort = new DelegateCommand(() =>
             {
                 CloseDialog();
-                _dialogInfo.CreationAbortedCallback();
+                dialogInfo.AbortedCallback();
             });
         }
     }

@@ -67,17 +67,6 @@ public class Db
 
     }
 
-    public void DeleteLicense(int licenseId)
-    {
-        var indexToDelete = Licenses.FindIndex(t => t.Id == licenseId);
-        if (indexToDelete >= 0)
-        {
-            Licenses.RemoveAt(indexToDelete);
-
-            XLicenseUsers.RemoveAll(t => t.LicenseId == licenseId);
-        }
-    }
-
     public License CreateLicense(string key, int productId, int usageTypeId, string usageComment, params User[] licenseUsers)
     {
         var id = Licenses.Max(t => t.Id) + 1;
@@ -107,6 +96,47 @@ public class Db
         return license;
     }
 
+    public License UpdateLicense(int licenseId, string key, int productId, int usageTypeId, string usageComment, User[] users)
+    {
+        var license = Licenses.First(t => t.Id == licenseId);
+        XLicenseUsers.RemoveAll(t => t.LicenseId == licenseId);
+
+        license.Key = key;
+        license.ProductId = productId;
+
+        switch (usageTypeId)
+        {
+            case 1:
+                license.UsageComment = usageComment;
+                break;
+            case 2:
+                license.LicenseUserId = users[0].Id;
+                break;
+            default:
+            {
+                foreach (var t in users)
+                {
+                    XLicenseUsers.Add(new XLicenseUser(licenseId, t.Id));
+                }
+
+                break;
+            }
+        }
+
+        return license;
+    }
+
+    public void DeleteLicense(int licenseId)
+    {
+        var indexToDelete = Licenses.FindIndex(t => t.Id == licenseId);
+        if (indexToDelete >= 0)
+        {
+            Licenses.RemoveAt(indexToDelete);
+
+            XLicenseUsers.RemoveAll(t => t.LicenseId == licenseId);
+        }
+    }
+
     public User[] GetUsersOfLicense(int licenseId)
     {
         return XLicenseUsers.Where(t => t.LicenseId == licenseId)
@@ -114,9 +144,31 @@ public class Db
             .ToArray();
     }
 
+    public Product CreateProduct(string name, string version, string licenser, string comment)
+    {
+        var id = Products.Max(t => t.Id) + 1;
+
+        var product = new Product { Id = id, Name = name, Version = version, Comment = comment, Licenser = licenser };
+        Products.Add(product);
+
+        return product;
+    }
+
+    public Product UpdateProduct(int toModifyId, string name, string version, string licenser, string comment)
+    {
+        var product = Products.First(t => t.Id == toModifyId);
+
+        product.Name = name;
+        product.Version = version;
+        product.Comment = comment;
+        product.Licenser = licenser;
+
+        return product;
+    }
+
     public void DeleteProduct(int licensedProductId)
     {
-        var associatedLicenseIds = Licenses.Where(t => t.ProductId == licensedProductId).Select(t=>t.Id).ToArray();
+        var associatedLicenseIds = Licenses.Where(t => t.ProductId == licensedProductId).Select(t => t.Id).ToArray();
 
         var indexToDelete = Products.FindIndex(t => t.Id == licensedProductId);
         if (indexToDelete >= 0)
@@ -129,14 +181,24 @@ public class Db
         }
     }
 
-    public Product CreateProduct(string name, string version, string licenser, string comment)
+    public User CreateUser(string name, string comment)
     {
-        var id = Products.Max(t => t.Id) + 1;
+        var id = Users.Max(t => t.Id) + 1;
 
-        var product = new Product { Id = id, Name = name, Version = version, Comment = comment, Licenser = licenser };
-        Products.Add(product);
+        var user = new User { Id = id, Comment = comment };
+        Users.Add(user);
 
-        return product;
+        return user;
+    }
+
+    public User UpdateUser(int toModifyId, string name, string comment)
+    {
+        var user = Users.First(t => t.Id == toModifyId);
+
+        user.Name = name;
+        user.Comment = comment;
+
+        return user;
     }
 
     public void DeleteUser(int userId)
@@ -156,13 +218,4 @@ public class Db
         XLicenseUsers.RemoveAll(t => t.UserId == userId);
     }
 
-    public User CreateUser(string name, string comment)
-    {
-        var id = Users.Max(t => t.Id) + 1;
-
-        var user = new User { Id = id, Comment = comment };
-        Users.Add(user);
-
-        return user;
-    }
 }

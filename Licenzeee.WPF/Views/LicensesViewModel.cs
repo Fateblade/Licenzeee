@@ -48,8 +48,9 @@ namespace Fateblade.Licenzeee.WPF.Views
             set => SetProperty(ref _filterProduct, value, filter);
         }
         
-        public DelegateCommand AddNew { get; private set; }
-        public DelegateCommand DeleteSelected { get; private set; }
+        public DelegateCommand AddNew { get; }
+        public DelegateCommand DeleteSelected { get; }
+        public DelegateCommand ModifySelected { get; }
 
         public LicensesViewModel(IEventAggregator eventAggregator)
         {

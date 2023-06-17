@@ -81,6 +81,10 @@
                         Command="{Binding Path=AddNew}" />
 
                 <Button Margin="8,0,0,0"
+                        Content="Modify" Width="80"
+                        Command="{Binding Path=ModifySelected}" />
+
+                <Button Margin="8,0,0,0"
                         Content="Delete" Width="80"
                         Command="{Binding Path=DeleteSelected}" />
             </StackPanel>
