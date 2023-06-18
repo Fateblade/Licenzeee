@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Events;
-using Fateblade.Licenzeee.WPF.Models;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -105,7 +105,7 @@ namespace Fateblade.Licenzeee.WPF.Views
 
         private void handleDeleteUserConfirmation(bool deleteConfirmed)
         {
-            if (!deleteConfirmed || SelectedProduct==null) return;
+            if (!deleteConfirmed || SelectedProduct==null) {return;}
 
             Db.Instance.DeleteProduct(SelectedProduct.Id);
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Events;
 using Fateblade.Licenzeee.WPF.LookUpContracts;
-using Fateblade.Licenzeee.WPF.Models;
 using Prism.Commands;
 using Prism.Events;
 

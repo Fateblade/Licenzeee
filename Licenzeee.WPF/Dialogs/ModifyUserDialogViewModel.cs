@@ -1,5 +1,5 @@
-﻿using Fateblade.Licenzeee.WPF.Events;
-using Fateblade.Licenzeee.WPF.Models;
+﻿using Fateblade.Licenzee.Db.Models;
+using Fateblade.Licenzeee.WPF.Events;
 using Prism.Commands;
 using Prism.Events;
 

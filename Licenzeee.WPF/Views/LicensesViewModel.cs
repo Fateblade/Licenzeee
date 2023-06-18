@@ -4,8 +4,8 @@ using Prism.Events;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Fateblade.Licenzeee.WPF.Models;
-using License = Fateblade.Licenzeee.WPF.Models.License;
+using Fateblade.Licenzee.Db.Models;
+using License = Fateblade.Licenzee.Db.Models.License;
 
 namespace Fateblade.Licenzeee.WPF.Views
 {
@@ -110,7 +110,7 @@ namespace Fateblade.Licenzeee.WPF.Views
         
         private void handleDeleteUserConfirmation(bool userConfirmed)
         {
-            if (!userConfirmed || SelectedLicense==null) return;
+            if (!userConfirmed || SelectedLicense==null) {return;}
 
             Db.Instance.DeleteLicense(SelectedLicense.Id);
 

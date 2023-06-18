@@ -1,8 +1,8 @@
-﻿using Fateblade.Licenzeee.WPF.Models;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
+using Fateblade.Licenzee.Db.Models;
 
 namespace Fateblade.Licenzeee.WPF.Converters
 {
@@ -10,7 +10,7 @@ namespace Fateblade.Licenzeee.WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not License license) return string.Empty;
+            if (value is not License license) {return string.Empty;}
 
             switch (license.UsageTypeId)
             {

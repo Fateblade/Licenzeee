@@ -1,4 +1,4 @@
-﻿namespace Fateblade.Licenzeee.WPF.Models;
+﻿namespace Fateblade.Licenzee.Db.Models;
 
 public class License
 {

@@ -1,6 +1,6 @@
 ﻿using BlackPearl.Controls.Contract;
-using Fateblade.Licenzeee.WPF.Models;
 using System;
+using Fateblade.Licenzee.Db.Models;
 
 namespace Fateblade.Licenzeee.WPF.LookUpContracts
 {
@@ -15,15 +15,15 @@ namespace Fateblade.Licenzeee.WPF.LookUpContracts
 
         public bool IsItemEqualToString(object sender, object item, string searchString)
         {
-            if (item is not User licenseUser) return false;
+            if (item is not User licenseUser) {return false;}
 
             return string.Compare(searchString, licenseUser.Name, StringComparison.InvariantCultureIgnoreCase) == 0;
         }
 
         public bool IsItemMatchingSearchString(object sender, object item, string searchString)
         {
-            if (item is not User licenseUser) return false;
-            if (string.IsNullOrEmpty(searchString)) return false;
+            if (item is not User licenseUser) {return false;}
+            if (string.IsNullOrEmpty(searchString)) {return false;}
 
             return licenseUser.Name.ToLower().Contains(searchString.ToLower());
         }

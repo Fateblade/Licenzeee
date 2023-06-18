@@ -1,8 +1,8 @@
-﻿using Fateblade.Licenzeee.WPF.Models;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
+using Fateblade.Licenzee.Db.Models;
 
 namespace Fateblade.Licenzeee.WPF.Converters
 {

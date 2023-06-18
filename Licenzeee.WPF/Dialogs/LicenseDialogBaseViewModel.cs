@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using BlackPearl.Controls.Contract;
+using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Events;
-using Fateblade.Licenzeee.WPF.Models;
 using Prism.Commands;
 using Prism.Events;
 

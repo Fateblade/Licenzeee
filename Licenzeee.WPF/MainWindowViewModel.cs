@@ -1,11 +1,11 @@
 ﻿using Fateblade.Licenzeee.WPF.Events;
 using Fateblade.Licenzeee.WPF.Inputs;
-using Fateblade.Licenzeee.WPF.Models;
 using Fateblade.Licenzeee.WPF.Views;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System.Collections.Generic;
+using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Dialogs;
 
 namespace Fateblade.Licenzeee.WPF
