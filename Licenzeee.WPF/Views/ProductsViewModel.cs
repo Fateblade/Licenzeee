@@ -55,13 +55,30 @@ namespace Fateblade.Licenzeee.WPF.Views
                         _eventAggregator.GetEvent<PubSubEvent<ShowCreateDialog<Product>>>().Publish(
                             new ShowCreateDialog<Product>(
                                 "Add a new licensed product",
-                                handleCreationCompleted,
+                                filterAndSelect,
                                 () => IsCreatingNew = false
                             ));
 
                     }, 
                 () => !IsCreatingNew)
                 .ObservesProperty(()=> IsCreatingNew);
+
+            ModifySelected = new DelegateCommand(
+                () =>
+                {
+                    IsCreatingNew = true;
+                    _eventAggregator.GetEvent<PubSubEvent<ShowModifyDialog<Product>>>().Publish(new ShowModifyDialog<Product>(
+                        "Modify Product",
+                        SelectedProduct!,
+                        filterAndSelect,
+                        () =>
+                        {
+                            IsCreatingNew = false;
+                        })); /*Request CreationDialog*/
+                },
+                () => !IsCreatingNew && SelectedProduct != null)
+                .ObservesProperty(() => IsCreatingNew)
+                .ObservesProperty(() => SelectedProduct);
 
             DeleteSelected = new DelegateCommand(
                     () =>
@@ -78,11 +95,12 @@ namespace Fateblade.Licenzeee.WPF.Views
             filter();
         }
 
-        private void handleCreationCompleted(Product obj)
+        private void filterAndSelect(Product obj)
         {
             filter();
 
             SelectedProduct = Products.FirstOrDefault(t => t.Id == obj.Id);
+            IsCreatingNew = false;
         }
 
         private void handleDeleteUserConfirmation(bool deleteConfirmed)

@@ -10,9 +10,6 @@ namespace Fateblade.Licenzeee.WPF.Views
 {
     internal class UsersViewModel : BindableBase
     {
-        private readonly IEventAggregator _eventAggregator;
-
-        
         private bool _isCreating;
         public bool IsCreating
         {
@@ -47,32 +44,50 @@ namespace Fateblade.Licenzeee.WPF.Views
 
         public UsersViewModel(IEventAggregator eventAggregator)
         {
-            _eventAggregator = eventAggregator;
+            var eventAggregator1 = eventAggregator;
 
             AddNew = new DelegateCommand(
                     () =>
                     {
                         IsCreating = true;
-                        _eventAggregator.GetEvent<PubSubEvent<ShowCreateDialog<User>>>().Publish(
+                        eventAggregator1.GetEvent<PubSubEvent<ShowCreateDialog<User>>>().Publish(
                             new ShowCreateDialog<User>(
                                 "Add a new license user",
-                                handleCreationCompleted,
+                                filterAndSelect,
                                 () => IsCreating = false
                             ));
                     },
                     () => !IsCreating)
                 .ObservesProperty(() => IsCreating);
 
+            ModifySelected = new DelegateCommand(
+                () =>
+                {
+                    IsCreating = true;
+                    eventAggregator1.GetEvent<PubSubEvent<ShowModifyDialog<User>>>().Publish(new ShowModifyDialog<User>(
+                        "Modify User",
+                        SelectedUser!,
+                        filterAndSelect,
+                        () =>
+                        {
+                            IsCreating = false;
+                        })); /*Request CreationDialog*/
+                },
+                () => !IsCreating && SelectedUser != null)
+                .ObservesProperty(()=>IsCreating)
+                .ObservesProperty(() => SelectedUser);
+
             DeleteSelected = new DelegateCommand(
                     ()=>
                     {
-                        _eventAggregator.GetEvent<PubSubEvent<UserConfirmationRequest>>()
+                        eventAggregator1.GetEvent<PubSubEvent<UserConfirmationRequest>>()
                             .Publish(new UserConfirmationRequest(
                                 "Delete User?",
                                 "This will delete the selected user and remove it from all assigned products. This action cannot be undone!",
                                 deleteConfirmation));
                     },
                     () => SelectedUser != null)
+                .ObservesProperty(() => IsCreating)
                 .ObservesProperty(() => SelectedUser);
 
             filter();
@@ -81,7 +96,7 @@ namespace Fateblade.Licenzeee.WPF.Views
 
         private void deleteConfirmation(bool userConfirmed)
         {
-            if (!userConfirmed || SelectedUser==null) return;
+            if (!userConfirmed || SelectedUser==null) { return; }
 
             Db.Instance.DeleteUser(SelectedUser.Id);
             SelectedUser = null;
@@ -89,7 +104,7 @@ namespace Fateblade.Licenzeee.WPF.Views
             filter();
         }
 
-        private void handleCreationCompleted(User createdUser)
+        private void filterAndSelect(User createdUser)
         {
             filter();
 

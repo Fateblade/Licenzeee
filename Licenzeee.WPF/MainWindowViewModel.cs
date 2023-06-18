@@ -59,6 +59,9 @@ namespace Fateblade.Licenzeee.WPF
             _eventAggregator.GetEvent<PubSubEvent<ShowCreateDialog<License>>>().Subscribe(handleShowCreateLicenseDialog);
             _eventAggregator.GetEvent<PubSubEvent<ShowCreateDialog<Product>>>().Subscribe(handleCreateProductDialog);
             _eventAggregator.GetEvent<PubSubEvent<ShowCreateDialog<User>>>().Subscribe(handleCreateUserDialog);
+            _eventAggregator.GetEvent<PubSubEvent<ShowModifyDialog<License>>>().Subscribe(handleModifyLicenseDialog);
+            _eventAggregator.GetEvent<PubSubEvent<ShowModifyDialog<Product>>>().Subscribe(handleModifyProductDialog);
+            _eventAggregator.GetEvent<PubSubEvent<ShowModifyDialog<User>>>().Subscribe(handleModifyUserDialog);
         }
 
 
@@ -98,6 +101,27 @@ namespace Fateblade.Licenzeee.WPF
             pushCurrentDialogToStack();
 
             DisplayedDialog = new CreateUserDialogViewModel(_eventAggregator, obj);
+        }
+
+        private void handleModifyLicenseDialog(ShowModifyDialog<License> obj)
+        {
+            pushCurrentDialogToStack();
+
+            DisplayedDialog = new ModifyLicenseDialogViewModel(_eventAggregator, obj);
+        }
+
+        private void handleModifyProductDialog(ShowModifyDialog<Product> obj)
+        {
+            pushCurrentDialogToStack();
+
+            DisplayedDialog = new ModifyProductDialogViewModel(_eventAggregator, obj);
+        }
+
+        private void handleModifyUserDialog(ShowModifyDialog<User> obj)
+        {
+            pushCurrentDialogToStack();
+
+            DisplayedDialog = new ModifyUserDialogViewModel(_eventAggregator, obj);
         }
 
         private void pushCurrentDialogToStack()

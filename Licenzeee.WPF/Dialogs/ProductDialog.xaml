@@ -45,7 +45,7 @@
                        Text="Licenser" />
 
             <TextBox Grid.Row="2" Grid.Column="1" Margin="4,8,0,0"
-                     Text="{Binding Path=LicenseGiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Path=Licenser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 
             <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,8,0,0"

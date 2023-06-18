@@ -62,13 +62,31 @@ namespace Fateblade.Licenzeee.WPF.Views
                     IsCreatingNew = true;
                     _eventAggregator.GetEvent<PubSubEvent<ShowCreateDialog<License>>>().Publish(new ShowCreateDialog<License>(
                         "Add New License",
-                        handleLicenseCreated,
+                        filterAndSelect,
                         ()=>
                         {
                             IsCreatingNew = false;
                         })); /*Request CreationDialog*/
                 },()=>!IsCreatingNew)
                 .ObservesProperty(()=> IsCreatingNew);
+
+            ModifySelected = new DelegateCommand(
+                () =>
+                {
+                    IsCreatingNew = true;
+                    _eventAggregator.GetEvent<PubSubEvent<ShowModifyDialog<License>>>().Publish(new ShowModifyDialog<License>(
+                        "Modify License",
+                        SelectedLicense!,
+                        filterAndSelect,
+                        () =>
+                        {
+                            IsCreatingNew = false;
+                        })); /*Request CreationDialog*/
+                },
+                () => !IsCreatingNew&& SelectedLicense != null )
+                .ObservesProperty(() => IsCreatingNew)
+                .ObservesProperty(()=>SelectedLicense);
+
             DeleteSelected = new DelegateCommand(
                 () => _eventAggregator.GetEvent<PubSubEvent<UserConfirmationRequest>>().Publish(
                     new UserConfirmationRequest(
@@ -83,13 +101,13 @@ namespace Fateblade.Licenzeee.WPF.Views
             filter();
         }
 
-        private void handleLicenseCreated(License createdLicense)
+        private void filterAndSelect(License toSelect)
         {
-            Licenses.Add(createdLicense);
-            SelectedLicense = createdLicense;
+            filter();
+            SelectedLicense = Licenses.First(t => t.Id == toSelect.Id);
             IsCreatingNew = false;
         }
-
+        
         private void handleDeleteUserConfirmation(bool userConfirmed)
         {
             if (!userConfirmed || SelectedLicense==null) return;

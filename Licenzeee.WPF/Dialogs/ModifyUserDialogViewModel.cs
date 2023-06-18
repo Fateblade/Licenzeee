@@ -10,6 +10,9 @@ class ModifyUserDialogViewModel : UserDialogBaseViewModel
     public ModifyUserDialogViewModel(IEventAggregator eventAggregator, ShowModifyDialog<User> dialogInfo)
         : base(eventAggregator, dialogInfo)
     {
+        Comment = dialogInfo.ToModify.Comment;
+        Name = dialogInfo.ToModify.Name;
+
         Confirm = new DelegateCommand(
                 () =>
                 {
