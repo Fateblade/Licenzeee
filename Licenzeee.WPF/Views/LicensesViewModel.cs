@@ -96,7 +96,7 @@ namespace Fateblade.Licenzeee.WPF.Views
                 () => SelectedLicense != null)
                 .ObservesProperty(()=>SelectedLicense);
 
-            Products = new ObservableCollection<Product>(Db.Instance.Products);
+            Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
 
             filter();
         }
@@ -112,15 +112,15 @@ namespace Fateblade.Licenzeee.WPF.Views
         {
             if (!userConfirmed || SelectedLicense==null) {return;}
 
-            Db.Instance.DeleteLicense(SelectedLicense.Id);
+            InMemoryDb.Instance.DeleteLicense(SelectedLicense.Id);
 
             filter();
         }
 
         private void filter()
         {
-            Licenses = FilterProduct != null ? new ObservableCollection<License>(Db.Instance.Licenses.Where(t=> t.ProductId == FilterProduct.Id)) : 
-                new ObservableCollection<License>(Db.Instance.Licenses);
+            Licenses = FilterProduct != null ? new ObservableCollection<License>(InMemoryDb.Instance.Licenses.Where(t=> t.ProductId == FilterProduct.Id)) : 
+                new ObservableCollection<License>(InMemoryDb.Instance.Licenses);
         }
 
 

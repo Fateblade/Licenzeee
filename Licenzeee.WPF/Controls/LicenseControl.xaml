@@ -39,9 +39,9 @@
                        Text="UsageType" />
 
         <ComboBox Grid.Row="1" Grid.Column="1" Margin="4,8,0,0"
-                      ItemsSource="{Binding Path=UsageTypes}"
+                      ItemsSource="{Binding Path=UsageTypes, Source={StaticResource StaticListProvider}}"
                       SelectedItem="{Binding Path=SelectedUsageType, Mode=TwoWay}"
-                      DisplayMemberPath="Name" />
+                      />
 
 
 

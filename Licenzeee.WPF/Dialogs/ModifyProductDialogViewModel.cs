@@ -31,7 +31,7 @@ internal class ModifyProductDialogViewModel : ProductDialogBaseViewModel
 
     private void modifyAndClose()
     {
-        var createdProduct = Db.Instance.UpdateProduct(_dialogInfo.ToModify.Id, Name, Version, Licenser, Comment);
+        var createdProduct = InMemoryDb.Instance.UpdateProduct(_dialogInfo.ToModify.Id, Name, Version, Licenser, Comment);
 
         CloseDialog();
         _dialogInfo.CompletedCallback(createdProduct);

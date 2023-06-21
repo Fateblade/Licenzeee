@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using BlackPearl.Controls.Contract;
+﻿using BlackPearl.Controls.Contract;
 using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Events;
 using Prism.Commands;
 using Prism.Events;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Fateblade.Licenzeee.WPF.Dialogs;
 
@@ -24,14 +24,7 @@ internal abstract class LicenseDialogBaseViewModel : DialogBindableBase
         set => SetProperty(ref _selectedProduct, value);
     }
 
-    private ObservableCollection<UsageType> _usageTypes;
-    public ObservableCollection<UsageType> UsageTypes
-    {
-        get => _usageTypes;
-        set => SetProperty(ref _usageTypes, value);
-    }
-
-    private UsageType _selectedUsageType;
+    private UsageType _selectedUsageType = UsageType.Comment;
     public UsageType SelectedUsageType
     {
         get => _selectedUsageType;
@@ -81,11 +74,7 @@ internal abstract class LicenseDialogBaseViewModel : DialogBindableBase
 
     protected LicenseDialogBaseViewModel(IEventAggregator eventAggregator, ShowDialogBase dialogInfo) : base(eventAggregator, dialogInfo)
     {
-        Products = new ObservableCollection<Product>(Db.Instance.Products);
-        UsageTypes = new ObservableCollection<UsageType>(Db.Instance.UsageTypes);
-        SelectedUsageType = UsageTypes.First();
-
-        Users = new ObservableCollection<User>(Db.Instance.Users);
-
+        Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
+        Users = new ObservableCollection<User>(InMemoryDb.Instance.Users);
     }
 }

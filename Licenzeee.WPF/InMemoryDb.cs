@@ -1,4 +1,5 @@
-﻿using Fateblade.Licenzee.Db;
+﻿using System;
+using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,12 @@ public class InMemoryDb : IDb
 {
     private readonly List<License> _licenses = new();
     private readonly List<Product> _products = new();
-    private readonly List<UsageType> _usageTypes = new(); 
     private readonly List<User> _users = new();
     private readonly List<XLicenseUser> _xLicenseUsers = new();
 
 
     public IQueryable<License> Licenses => _licenses.AsQueryable();
     public IQueryable<Product> Products => _products.AsQueryable();
-    public IQueryable<UsageType> UsageTypes => _usageTypes.AsQueryable();
     public IQueryable<User> Users => _users.AsQueryable();
     public IQueryable<XLicenseUser> XLicenseUsers => _xLicenseUsers.AsQueryable();
     
@@ -35,19 +34,15 @@ public class InMemoryDb : IDb
 
     private InMemoryDb()
     {
-        _usageTypes.Add(new(1, "Comment"));
-        _usageTypes.Add(new(2, "SingleUser"));
-        _usageTypes.Add(new(3, "MultiUser"));
-
         //Debug Sample Data
-        _licenses.Add(new License { Id = 1, Key = "Key1", ProductId = 1, UsageComment = "UsageComment1", UsageTypeId = 1, LicenseUserId = 0 });
-        _licenses.Add(new License { Id = 2, Key = "Key2", ProductId = 2, UsageComment = "UsageComment2", UsageTypeId = 1, LicenseUserId = 0 });
-        _licenses.Add(new License { Id = 3, Key = "Key3", ProductId = 1, UsageComment = "UsageComment3", UsageTypeId = 2, LicenseUserId = 1 });
-        _licenses.Add(new License { Id = 4, Key = "Key4", ProductId = 3, UsageComment = "UsageComment4", UsageTypeId = 2, LicenseUserId = 2 });
-        _licenses.Add(new License { Id = 5, Key = "Key5", ProductId = 1, UsageComment = "UsageComment5", UsageTypeId = 2, LicenseUserId = 3 });
-        _licenses.Add(new License { Id = 6, Key = "Key6", ProductId = 4, UsageComment = "UsageComment6", UsageTypeId = 2, LicenseUserId = 4 });
-        _licenses.Add(new License { Id = 7, Key = "Key7", ProductId = 1, UsageComment = "UsageComment7", UsageTypeId = 3, LicenseUserId = 0 });
-        _licenses.Add(new License { Id = 8, Key = "Key8", ProductId = 2, UsageComment = "UsageComment8", UsageTypeId = 3, LicenseUserId = 0 });
+        _licenses.Add(new License { Id = 1, Key = "Key1", ProductId = 1, UsageComment = "UsageComment1", UsageType = UsageType.Comment, LicenseUserId = 0 });
+        _licenses.Add(new License { Id = 2, Key = "Key2", ProductId = 2, UsageComment = "UsageComment2", UsageType = UsageType.Comment, LicenseUserId = 0 });
+        _licenses.Add(new License { Id = 3, Key = "Key3", ProductId = 1, UsageComment = "UsageComment3", UsageType = UsageType.SingleUser, LicenseUserId = 1 });
+        _licenses.Add(new License { Id = 4, Key = "Key4", ProductId = 3, UsageComment = "UsageComment4", UsageType = UsageType.SingleUser, LicenseUserId = 2 });
+        _licenses.Add(new License { Id = 5, Key = "Key5", ProductId = 1, UsageComment = "UsageComment5", UsageType = UsageType.SingleUser, LicenseUserId = 3 });
+        _licenses.Add(new License { Id = 6, Key = "Key6", ProductId = 4, UsageComment = "UsageComment6", UsageType = UsageType.SingleUser, LicenseUserId = 4 });
+        _licenses.Add(new License { Id = 7, Key = "Key7", ProductId = 1, UsageComment = "UsageComment7", UsageType = UsageType.MultiUser, LicenseUserId = 0 });
+        _licenses.Add(new License { Id = 8, Key = "Key8", ProductId = 2, UsageComment = "UsageComment8", UsageType = UsageType.MultiUser, LicenseUserId = 0 });
 
         _products.Add(new Product { Id = 1, Licenser = "LicenseGiver1", Name = "ProductName1", Version = "Version1" });
         _products.Add(new Product { Id = 2, Licenser = "LicenseGiver1", Name = "ProductName2", Version = "Version2" });
@@ -71,18 +66,19 @@ public class InMemoryDb : IDb
     }
 
 
-    public License CreateLicense(string key, int productId, int usageTypeId, string usageComment, params User[] licenseUsers)
+    public License CreateLicense(string key, int productId, UsageType usageType, string usageComment,
+        params User[] licenseUsers)
     {
         var id = Licenses.Max(t => t.Id) + 1;
 
-        var license = new License { Id = id, Key = key, ProductId = productId, UsageTypeId = usageTypeId };
+        var license = new License { Id = id, Key = key, ProductId = productId, UsageType = usageType };
 
-        switch (usageTypeId)
+        switch (usageType)
         {
-            case 1:
+            case UsageType.Comment:
                 license.UsageComment = usageComment;
                 break;
-            case 2:
+            case UsageType.SingleUser:
                 license.LicenseUserId = licenseUsers[0].Id;
                 break;
             default:
@@ -100,7 +96,7 @@ public class InMemoryDb : IDb
         return license;
     }
 
-    public License UpdateLicense(int licenseId, string key, int productId, int usageTypeId, string usageComment, User[] users)
+    public License UpdateLicense(int licenseId, string key, int productId, UsageType usageType, string usageComment, User[] users)
     {
         var license = Licenses.First(t => t.Id == licenseId);
         _xLicenseUsers.RemoveAll(t => t.LicenseId == licenseId);
@@ -108,13 +104,13 @@ public class InMemoryDb : IDb
         license.Key = key;
         license.ProductId = productId;
 
-        switch (usageTypeId)
+        switch (usageType)
         {
-            case 1:
+            case UsageType.Comment:
                 license.UsageComment = usageComment;
                 break;
-            case 2:
-                license.LicenseUserId = users[0].Id;
+            case UsageType.SingleUser:
+                license.LicenseUserId = users.Length > 0 ? users[0].Id : 0;
                 break;
             default:
             {

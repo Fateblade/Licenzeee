@@ -1,6 +1,6 @@
 ﻿namespace Fateblade.Licenzee.Db.Models;
 
-public struct XLicenseUser
+public class XLicenseUser
 {
     public int LicenseId { get; }
     public int UserId { get; }

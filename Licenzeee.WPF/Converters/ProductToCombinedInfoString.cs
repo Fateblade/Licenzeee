@@ -32,7 +32,7 @@ namespace Fateblade.Licenzeee.WPF.Converters
         {
             if (value is not int licensedProductId) return string.Empty;
 
-            return LicensedProductToCombinedInfoString.GetCombinedInfoString(Db.Instance.Products.First(t=>t.Id==licensedProductId));
+            return LicensedProductToCombinedInfoString.GetCombinedInfoString(InMemoryDb.Instance.Products.First(t=>t.Id==licensedProductId));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -26,7 +26,7 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
 
         private void createAndClose()
         {
-            var createdProduct = Db.Instance.CreateProduct(Name, Version, Licenser, Comment);
+            var createdProduct = InMemoryDb.Instance.CreateProduct(Name, Version, Licenser, Comment);
 
             CloseDialog();
             _dialogInfo.CompletedCallback(createdProduct);

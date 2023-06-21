@@ -18,11 +18,9 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
         {
             _dialogInfo = dialogInfo;
 
-            Products = new ObservableCollection<Product>(Db.Instance.Products);
-            UsageTypes = new ObservableCollection<UsageType>(Db.Instance.UsageTypes);
-            SelectedUsageType = UsageTypes.First();
+            Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
 
-            Users = new ObservableCollection<User>(Db.Instance.Users);
+            Users = new ObservableCollection<User>(InMemoryDb.Instance.Users);
 
             Confirm = new DelegateCommand(createAndCloseDialog, ()=>SelectedProduct!=null&&!string.IsNullOrWhiteSpace(Key))
                 .ObservesProperty(()=>SelectedProduct)
@@ -42,11 +40,11 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
             if (SelectedProduct == null) { return;}
 
             User[] users;
-            if (SelectedUsageType.Id == 2)
+            if (SelectedUsageType == UsageType.SingleUser)
             {
                 users = SelectedUser != null ? new[] { SelectedUser } : Array.Empty<User>();
             }
-            else if (SelectedUsageType.Id == 3)
+            else if (SelectedUsageType == UsageType.MultiUser)
             {
                 users = SelectedUsers.ToArray();
             }
@@ -55,7 +53,7 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
                 users = Array.Empty<User>();
             }
 
-            var createdLicense = Db.Instance.CreateLicense(Key, SelectedProduct.Id, SelectedUsageType.Id, UsageComment, users);
+            var createdLicense = InMemoryDb.Instance.CreateLicense(Key, SelectedProduct.Id, SelectedUsageType, UsageComment, users);
 
             CloseDialog();
             _dialogInfo.CompletedCallback(createdLicense);

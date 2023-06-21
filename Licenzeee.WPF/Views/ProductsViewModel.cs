@@ -107,7 +107,7 @@ namespace Fateblade.Licenzeee.WPF.Views
         {
             if (!deleteConfirmed || SelectedProduct==null) {return;}
 
-            Db.Instance.DeleteProduct(SelectedProduct.Id);
+            InMemoryDb.Instance.DeleteProduct(SelectedProduct.Id);
 
             filter();
         }
@@ -117,7 +117,7 @@ namespace Fateblade.Licenzeee.WPF.Views
             if (!string.IsNullOrEmpty(FilterText))
             {
                 Products = new ObservableCollection<Product>(
-                    Db.Instance.Products.Where(
+                    InMemoryDb.Instance.Products.Where(
                         t=>
                             t.Name.ToLower().Contains(FilterText.ToLower())
                             || t.Version.ToLower().Contains(FilterText.ToLower())
@@ -126,7 +126,7 @@ namespace Fateblade.Licenzeee.WPF.Views
             }
             else
             {
-                Products = new ObservableCollection<Product>(Db.Instance.Products);
+                Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
             Confirm = new DelegateCommand(
                     () =>
                     {
-                        var createdUser = Db.Instance.CreateUser(Name, Comment);
+                        var createdUser = InMemoryDb.Instance.CreateUser(Name, Comment);
 
                         CloseDialog();
                         dialogInfo.CompletedCallback(createdUser);

@@ -16,7 +16,7 @@ class ModifyUserDialogViewModel : UserDialogBaseViewModel
         Confirm = new DelegateCommand(
                 () =>
                 {
-                    var modifiedUser = Db.Instance.UpdateUser(dialogInfo.ToModify.Id, Name, Comment);
+                    var modifiedUser = InMemoryDb.Instance.UpdateUser(dialogInfo.ToModify.Id, Name, Comment);
 
                     CloseDialog();
                     dialogInfo.CompletedCallback(modifiedUser);

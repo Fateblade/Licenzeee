@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Fateblade.Licenzee.Db.Models;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using Fateblade.Licenzee.Db.Models;
 
 namespace Fateblade.Licenzeee.WPF.Converters
 {
@@ -12,11 +12,11 @@ namespace Fateblade.Licenzeee.WPF.Converters
         {
             if (value is not License license) {return string.Empty;}
 
-            switch (license.UsageTypeId)
+            switch (license.UsageType)
             {
-                case 1: return license.UsageComment??string.Empty;
-                case 2: return Db.Instance.Users.FirstOrDefault(t=>t.Id ==license.LicenseUserId)?.Name ??string.Empty;
-                case 3: return string.Join("; ", Db.Instance.GetUsersOfLicense(license.Id).Select((t)=>t.Name));
+                case UsageType.Comment: return license.UsageComment??string.Empty;
+                case UsageType.SingleUser: return InMemoryDb.Instance.Users.FirstOrDefault(t=>t.Id ==license.LicenseUserId)?.Name ??string.Empty;
+                case UsageType.MultiUser: return string.Join("; ", InMemoryDb.Instance.GetUsersOfLicense(license.Id).Select((t)=>t.Name));
                 default: return string.Empty;
             }
         }

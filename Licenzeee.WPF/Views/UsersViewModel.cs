@@ -98,7 +98,7 @@ namespace Fateblade.Licenzeee.WPF.Views
         {
             if (!userConfirmed || SelectedUser==null) { return; }
 
-            Db.Instance.DeleteUser(SelectedUser.Id);
+            InMemoryDb.Instance.DeleteUser(SelectedUser.Id);
             SelectedUser = null;
 
             filter();
@@ -116,13 +116,13 @@ namespace Fateblade.Licenzeee.WPF.Views
             if (!string.IsNullOrWhiteSpace(FilterText))
             {
                 Users = new ObservableCollection<User>(
-                    Db.Instance.Users.Where(
+                    InMemoryDb.Instance.Users.Where(
                         t => t.Name.ToLower().Contains(FilterText.ToLower())
                              || t.Comment.ToLower().Contains(FilterText.ToLower())));
             }
             else
             {
-                Users = new ObservableCollection<User>(Db.Instance.Users);
+                Users = new ObservableCollection<User>(InMemoryDb.Instance.Users);
             }
         }
     }

@@ -7,12 +7,11 @@ namespace Fateblade.Licenzee.Db
     {
         IQueryable<License> Licenses { get; }
         IQueryable<Product> Products { get; }
-        IQueryable<UsageType> UsageTypes { get; }
         IQueryable<User> Users { get; }
         IQueryable<XLicenseUser> XLicenseUsers { get; }
 
-        License CreateLicense(string key, int productId, int usageTypeId, string usageComment, params User[] licenseUsers);
-        License UpdateLicense(int licenseId, string key, int productId, int usageTypeId, string usageComment, User[] users);
+        License CreateLicense(string key, int productId, UsageType usageType, string usageComment, params User[] licenseUsers);
+        License UpdateLicense(int licenseId, string key, int productId, UsageType usageType, string usageComment, User[] users);
         void DeleteLicense(int licenseId);
         User[] GetUsersOfLicense(int licenseId);
 
