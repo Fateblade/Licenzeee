@@ -1,4 +1,5 @@
-﻿using Fateblade.Licenzee.Db.Models;
+﻿using Fateblade.Licenzee.Db;
+using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Events;
 using Prism.Commands;
 using Prism.Events;
@@ -10,8 +11,8 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
         private readonly ShowCreateDialog<Product> _dialogInfo;
 
         
-        public CreateProductDialogViewModel(IEventAggregator eventAggregator, ShowCreateDialog<Product> dialogInfo)
-            : base(eventAggregator, dialogInfo)
+        public CreateProductDialogViewModel(IEventAggregator eventAggregator, ShowCreateDialog<Product> dialogInfo, IDb db)
+            : base(eventAggregator, dialogInfo, db)
         {
             _dialogInfo = dialogInfo;
 
@@ -26,7 +27,7 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
 
         private void createAndClose()
         {
-            var createdProduct = InMemoryDb.Instance.CreateProduct(Name, Version, Licenser, Comment);
+            var createdProduct = Db.CreateProduct(Name, Version, Licenser, Comment);
 
             CloseDialog();
             _dialogInfo.CompletedCallback(createdProduct);

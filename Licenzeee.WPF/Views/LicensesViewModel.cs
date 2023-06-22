@@ -4,15 +4,18 @@ using Prism.Events;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
 using License = Fateblade.Licenzee.Db.Models.License;
+using Fateblade.Licenzeee.WPF.Db;
 
 namespace Fateblade.Licenzeee.WPF.Views
 {
     internal class LicensesViewModel : BindableBase
     {
         private readonly IEventAggregator _eventAggregator;
-        
+        private readonly IDb _db;
+
         private bool _isCreatingNew;
         public bool IsCreatingNew
         {
@@ -52,9 +55,10 @@ namespace Fateblade.Licenzeee.WPF.Views
         public DelegateCommand DeleteSelected { get; }
         public DelegateCommand ModifySelected { get; }
 
-        public LicensesViewModel(IEventAggregator eventAggregator)
+        public LicensesViewModel(IEventAggregator eventAggregator, IDb db)
         {
             _eventAggregator = eventAggregator;
+            _db = db;
 
             AddNew = new DelegateCommand(
                 () =>
@@ -96,7 +100,7 @@ namespace Fateblade.Licenzeee.WPF.Views
                 () => SelectedLicense != null)
                 .ObservesProperty(()=>SelectedLicense);
 
-            Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
+            Products = new ObservableCollection<Product>(_db.Products);
 
             filter();
         }
@@ -112,15 +116,15 @@ namespace Fateblade.Licenzeee.WPF.Views
         {
             if (!userConfirmed || SelectedLicense==null) {return;}
 
-            InMemoryDb.Instance.DeleteLicense(SelectedLicense.Id);
+            _db.DeleteLicense(SelectedLicense.Id);
 
             filter();
         }
 
         private void filter()
         {
-            Licenses = FilterProduct != null ? new ObservableCollection<License>(InMemoryDb.Instance.Licenses.Where(t=> t.ProductId == FilterProduct.Id)) : 
-                new ObservableCollection<License>(InMemoryDb.Instance.Licenses);
+            Licenses = FilterProduct != null ? new ObservableCollection<License>(_db.Licenses.Where(t=> t.ProductId == FilterProduct.Id)) : 
+                new ObservableCollection<License>(_db.Licenses);
         }
 
 

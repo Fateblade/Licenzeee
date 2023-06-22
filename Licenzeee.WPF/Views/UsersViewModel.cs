@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
+using Fateblade.Licenzeee.WPF.Db;
 using Fateblade.Licenzeee.WPF.Events;
 using Prism.Commands;
 using Prism.Events;
@@ -10,6 +12,7 @@ namespace Fateblade.Licenzeee.WPF.Views
 {
     internal class UsersViewModel : BindableBase
     {
+        private readonly IDb _db;
         private bool _isCreating;
         public bool IsCreating
         {
@@ -42,8 +45,9 @@ namespace Fateblade.Licenzeee.WPF.Views
         public DelegateCommand DeleteSelected { get; }
         public DelegateCommand ModifySelected { get; }
 
-        public UsersViewModel(IEventAggregator eventAggregator)
+        public UsersViewModel(IEventAggregator eventAggregator, IDb db)
         {
+            _db = db;
             var eventAggregator1 = eventAggregator;
 
             AddNew = new DelegateCommand(
@@ -98,7 +102,7 @@ namespace Fateblade.Licenzeee.WPF.Views
         {
             if (!userConfirmed || SelectedUser==null) { return; }
 
-            InMemoryDb.Instance.DeleteUser(SelectedUser.Id);
+            _db.DeleteUser(SelectedUser.Id);
             SelectedUser = null;
 
             filter();
@@ -116,13 +120,13 @@ namespace Fateblade.Licenzeee.WPF.Views
             if (!string.IsNullOrWhiteSpace(FilterText))
             {
                 Users = new ObservableCollection<User>(
-                    InMemoryDb.Instance.Users.Where(
+                    _db.Users.Where(
                         t => t.Name.ToLower().Contains(FilterText.ToLower())
                              || t.Comment.ToLower().Contains(FilterText.ToLower())));
             }
             else
             {
-                Users = new ObservableCollection<User>(InMemoryDb.Instance.Users);
+                Users = new ObservableCollection<User>(_db.Users);
             }
         }
     }

@@ -1,10 +1,14 @@
-﻿using Fateblade.Licenzeee.WPF.Events;
+﻿using Fateblade.Licenzee.Db;
+using Fateblade.Licenzeee.WPF.Events;
 using Prism.Events;
 
 namespace Fateblade.Licenzeee.WPF.Dialogs;
 
 internal class ProductDialogBaseViewModel : ConfirmableDialogBindableBase
 {
+    protected IDb Db { get; }
+
+
     private string _name = string.Empty;
     public string Name
     {
@@ -34,6 +38,9 @@ internal class ProductDialogBaseViewModel : ConfirmableDialogBindableBase
     }
 
 
-    public ProductDialogBaseViewModel(IEventAggregator eventAggregator, ShowDialogBase dialogInfo)
-        : base(eventAggregator, dialogInfo){}
+    public ProductDialogBaseViewModel(IEventAggregator eventAggregator, ShowDialogBase dialogInfo, IDb db)
+        : base(eventAggregator, dialogInfo)
+    {
+        Db = db;
+    }
 }

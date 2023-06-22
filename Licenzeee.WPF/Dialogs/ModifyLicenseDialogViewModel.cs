@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Events;
 using Fateblade.Licenzeee.WPF.LookUpContracts;
 using Prism.Commands;
 using Prism.Events;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Fateblade.Licenzeee.WPF.Dialogs;
 
@@ -14,7 +15,7 @@ internal class ModifyLicenseDialogViewModel : LicenseDialogBaseViewModel
     private readonly ShowModifyDialog<License> _dialogInfo;
 
 
-    public ModifyLicenseDialogViewModel(IEventAggregator eventAggregator, ShowModifyDialog<License> dialogInfo) : base(eventAggregator, dialogInfo)
+    public ModifyLicenseDialogViewModel(IEventAggregator eventAggregator, ShowModifyDialog<License> dialogInfo, IDb db) : base(eventAggregator, dialogInfo, db)
     {
         _dialogInfo = dialogInfo;
 
@@ -23,7 +24,7 @@ internal class ModifyLicenseDialogViewModel : LicenseDialogBaseViewModel
         Key = dialogInfo.ToModify.Key;
         SelectedUser = Users.FirstOrDefault(t => t.Id == dialogInfo.ToModify.LicenseUserId);
         UsageComment = dialogInfo.ToModify.UsageComment ?? string.Empty;
-        SelectedUsers = new ObservableCollection<User>(InMemoryDb.Instance.GetUsersOfLicense(dialogInfo.ToModify.Id));
+        SelectedUsers = new ObservableCollection<User>(Db.GetUsersOfLicense(dialogInfo.ToModify.Id));
         
         Confirm = new DelegateCommand(modifyAndCloseDialog, () => SelectedProduct != null && !string.IsNullOrWhiteSpace(Key))
             .ObservesProperty(() => SelectedProduct)
@@ -56,7 +57,7 @@ internal class ModifyLicenseDialogViewModel : LicenseDialogBaseViewModel
             users = Array.Empty<User>();
         }
 
-        var modifiedLicense = InMemoryDb.Instance.UpdateLicense(
+        var modifiedLicense = Db.UpdateLicense(
             _dialogInfo.ToModify.Id, 
             Key, 
             SelectedProduct.Id,

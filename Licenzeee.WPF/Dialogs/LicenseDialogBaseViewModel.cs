@@ -1,15 +1,18 @@
 ﻿using BlackPearl.Controls.Contract;
+using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Events;
 using Prism.Commands;
 using Prism.Events;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Fateblade.Licenzeee.WPF.Dialogs;
 
 internal abstract class LicenseDialogBaseViewModel : DialogBindableBase
 {
+    protected IDb Db { get; }
+
+
     private ObservableCollection<Product> _products;
     public ObservableCollection<Product> Products
     {
@@ -72,9 +75,11 @@ internal abstract class LicenseDialogBaseViewModel : DialogBindableBase
     public DelegateCommand Abort { get; protected set; }
 
 
-    protected LicenseDialogBaseViewModel(IEventAggregator eventAggregator, ShowDialogBase dialogInfo) : base(eventAggregator, dialogInfo)
+    protected LicenseDialogBaseViewModel(IEventAggregator eventAggregator, ShowDialogBase dialogInfo, IDb db) : base(eventAggregator, dialogInfo)
     {
-        Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
-        Users = new ObservableCollection<User>(InMemoryDb.Instance.Users);
+        Db = db;
+        Products = new ObservableCollection<Product>(Db.Products);
+        Users = new ObservableCollection<User>(Db.Users);
+        
     }
 }

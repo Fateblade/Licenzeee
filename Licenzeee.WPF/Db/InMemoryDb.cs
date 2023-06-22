@@ -1,9 +1,10 @@
-﻿using System;
-using Fateblade.Licenzee.Db;
+﻿using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
 using System.Collections.Generic;
 using System.Linq;
-namespace Fateblade.Licenzeee.WPF;
+using License = Fateblade.Licenzee.Db.Models.License;
+
+namespace Fateblade.Licenzeee.WPF.Db;
 
 public class InMemoryDb : IDb
 {
@@ -17,53 +18,6 @@ public class InMemoryDb : IDb
     public IQueryable<Product> Products => _products.AsQueryable();
     public IQueryable<User> Users => _users.AsQueryable();
     public IQueryable<XLicenseUser> XLicenseUsers => _xLicenseUsers.AsQueryable();
-    
-    private static InMemoryDb? _instance;
-    public static InMemoryDb Instance {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new InMemoryDb();
-            }
-
-            return _instance;
-        }
-    }
-    
-
-    private InMemoryDb()
-    {
-        //Debug Sample Data
-        _licenses.Add(new License { Id = 1, Key = "Key1", ProductId = 1, UsageComment = "UsageComment1", UsageType = UsageType.Comment, LicenseUserId = 0 });
-        _licenses.Add(new License { Id = 2, Key = "Key2", ProductId = 2, UsageComment = "UsageComment2", UsageType = UsageType.Comment, LicenseUserId = 0 });
-        _licenses.Add(new License { Id = 3, Key = "Key3", ProductId = 1, UsageComment = "UsageComment3", UsageType = UsageType.SingleUser, LicenseUserId = 1 });
-        _licenses.Add(new License { Id = 4, Key = "Key4", ProductId = 3, UsageComment = "UsageComment4", UsageType = UsageType.SingleUser, LicenseUserId = 2 });
-        _licenses.Add(new License { Id = 5, Key = "Key5", ProductId = 1, UsageComment = "UsageComment5", UsageType = UsageType.SingleUser, LicenseUserId = 3 });
-        _licenses.Add(new License { Id = 6, Key = "Key6", ProductId = 4, UsageComment = "UsageComment6", UsageType = UsageType.SingleUser, LicenseUserId = 4 });
-        _licenses.Add(new License { Id = 7, Key = "Key7", ProductId = 1, UsageComment = "UsageComment7", UsageType = UsageType.MultiUser, LicenseUserId = 0 });
-        _licenses.Add(new License { Id = 8, Key = "Key8", ProductId = 2, UsageComment = "UsageComment8", UsageType = UsageType.MultiUser, LicenseUserId = 0 });
-
-        _products.Add(new Product { Id = 1, Licenser = "LicenseGiver1", Name = "ProductName1", Version = "Version1" });
-        _products.Add(new Product { Id = 2, Licenser = "LicenseGiver1", Name = "ProductName2", Version = "Version2" });
-        _products.Add(new Product { Id = 3, Licenser = "LicenseGiver2", Name = "ProductName3", Version = "Version3" });
-        _products.Add(new Product { Id = 4, Licenser = "LicenseGiver2", Name = "ProductName4", Version = "Version4" });
-        _products.Add(new Product { Id = 5, Licenser = "LicenseGiver2", Name = "ProductName3", Version = "Version3.5" });
-
-        _users.Add(new User { Id = 1, Name = "LicenseUser1", Comment = "Comment1" });
-        _users.Add(new User { Id = 2, Name = "LicenseUser2", Comment = "Comment2" });
-        _users.Add(new User { Id = 3, Name = "LicenseUser3", Comment = "Comment3" });
-        _users.Add(new User { Id = 4, Name = "LicenseUser4", Comment = "Comment4" });
-        _users.Add(new User { Id = 5, Name = "LicenseUser5", Comment = "Comment5" });
-        _users.Add(new User { Id = 6, Name = "LicenseUser6", Comment = "Comment6" });
-
-        _xLicenseUsers.Add(new XLicenseUser(7, 1));
-        _xLicenseUsers.Add(new XLicenseUser(7, 3));
-        _xLicenseUsers.Add(new XLicenseUser(7, 5));
-        _xLicenseUsers.Add(new XLicenseUser(8, 2));
-        _xLicenseUsers.Add(new XLicenseUser(8, 4));
-        _xLicenseUsers.Add(new XLicenseUser(8, 6));
-    }
 
 
     public License CreateLicense(string key, int productId, UsageType usageType, string usageComment,
@@ -82,14 +36,14 @@ public class InMemoryDb : IDb
                 license.LicenseUserId = licenseUsers[0].Id;
                 break;
             default:
-            {
-                foreach (var t in licenseUsers)
                 {
-                    _xLicenseUsers.Add(new XLicenseUser(id, t.Id));
-                }
+                    foreach (var t in licenseUsers)
+                    {
+                        _xLicenseUsers.Add(new XLicenseUser(id, t.Id));
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
 
         _licenses.Add(license);
@@ -113,14 +67,14 @@ public class InMemoryDb : IDb
                 license.LicenseUserId = users.Length > 0 ? users[0].Id : 0;
                 break;
             default:
-            {
-                foreach (var t in users)
                 {
-                    _xLicenseUsers.Add(new XLicenseUser(licenseId, t.Id));
-                }
+                    foreach (var t in users)
+                    {
+                        _xLicenseUsers.Add(new XLicenseUser(licenseId, t.Id));
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
 
         return license;

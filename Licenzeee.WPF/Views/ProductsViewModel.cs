@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
+using Fateblade.Licenzeee.WPF.Db;
 using Fateblade.Licenzeee.WPF.Events;
 using Prism.Commands;
 using Prism.Events;
@@ -11,6 +13,7 @@ namespace Fateblade.Licenzeee.WPF.Views
     internal class ProductsViewModel : BindableBase
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly IDb _db;
 
         private bool _isCreatingNew;
         public bool IsCreatingNew
@@ -44,9 +47,10 @@ namespace Fateblade.Licenzeee.WPF.Views
         public DelegateCommand DeleteSelected { get; }
         public DelegateCommand ModifySelected { get; }
 
-        public ProductsViewModel(IEventAggregator eventAggregator)
+        public ProductsViewModel(IEventAggregator eventAggregator, IDb db)
         {
             _eventAggregator = eventAggregator;
+            _db = db;
 
             AddNew = new DelegateCommand(
                     () =>
@@ -107,7 +111,7 @@ namespace Fateblade.Licenzeee.WPF.Views
         {
             if (!deleteConfirmed || SelectedProduct==null) {return;}
 
-            InMemoryDb.Instance.DeleteProduct(SelectedProduct.Id);
+            _db.DeleteProduct(SelectedProduct.Id);
 
             filter();
         }
@@ -117,7 +121,7 @@ namespace Fateblade.Licenzeee.WPF.Views
             if (!string.IsNullOrEmpty(FilterText))
             {
                 Products = new ObservableCollection<Product>(
-                    InMemoryDb.Instance.Products.Where(
+                    _db.Products.Where(
                         t=>
                             t.Name.ToLower().Contains(FilterText.ToLower())
                             || t.Version.ToLower().Contains(FilterText.ToLower())
@@ -126,7 +130,7 @@ namespace Fateblade.Licenzeee.WPF.Views
             }
             else
             {
-                Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
+                Products = new ObservableCollection<Product>(_db.Products);
             }
         }
     }

@@ -37,8 +37,8 @@ namespace Fateblade.Licenzeee.WPF
         public DelegateCommand Abort { get;protected set; }
 
 
-        protected ConfirmableDialogBindableBase(IEventAggregator eventAggregator, ShowDialogBase dialogInfo) : base(
-            eventAggregator, dialogInfo)
+        protected ConfirmableDialogBindableBase(IEventAggregator eventAggregator, ShowDialogBase dialogInfo) 
+            : base(eventAggregator, dialogInfo)
         {
             Confirm = new DelegateCommand(CloseDialog);
             Abort = new DelegateCommand(CloseDialog);

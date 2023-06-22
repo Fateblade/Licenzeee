@@ -7,6 +7,7 @@ using Prism.Mvvm;
 using System.Collections.Generic;
 using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Dialogs;
+using Fateblade.Licenzee.Db;
 
 namespace Fateblade.Licenzeee.WPF
 {
@@ -14,8 +15,9 @@ namespace Fateblade.Licenzeee.WPF
     {
         private readonly Stack<BindableBaseWithHeader> _dialogStack;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IDbProvidingApp _dbProvider;
 
-        
+
         private BindableBase? _displayedContent;
         public BindableBase? DisplayedContent
         {
@@ -43,14 +45,15 @@ namespace Fateblade.Licenzeee.WPF
         public DelegateCommand SwitchToOptions { get; }
 
 
-        public MainWindowViewModel(IEventAggregator eventAggregator)
+        public MainWindowViewModel(IEventAggregator eventAggregator, IDbProvidingApp dbProvider)
         {
             _eventAggregator = eventAggregator;
+            _dbProvider = dbProvider;
             _dialogStack = new Stack<BindableBaseWithHeader>();
 
-            SwitchToLicenses = new DelegateCommand(() => DisplayedContent = new LicensesViewModel(_eventAggregator));
-            SwitchToProducts = new DelegateCommand(() => DisplayedContent = new ProductsViewModel(_eventAggregator));
-            SwitchToUsers = new DelegateCommand(() => DisplayedContent = new UsersViewModel(_eventAggregator));
+            SwitchToLicenses = new DelegateCommand(() => DisplayedContent = new LicensesViewModel(_eventAggregator, _dbProvider.Db));
+            SwitchToProducts = new DelegateCommand(() => DisplayedContent = new ProductsViewModel(_eventAggregator, _dbProvider.Db));
+            SwitchToUsers = new DelegateCommand(() => DisplayedContent = new UsersViewModel(_eventAggregator, _dbProvider.Db));
             SwitchToOptions = new DelegateCommand(() => DisplayedContent = new OptionsViewModel());
 
             _eventAggregator.GetEvent<PubSubEvent<UserConfirmationRequest>>().Subscribe(handleUserConfirmationRequest);
@@ -86,42 +89,42 @@ namespace Fateblade.Licenzeee.WPF
         {
             pushCurrentDialogToStack();
 
-            DisplayedDialog = new CreateLicenseDialogViewModel(_eventAggregator, obj);
+            DisplayedDialog = new CreateLicenseDialogViewModel(_eventAggregator, obj, _dbProvider.Db);
         }
         
         private void handleCreateProductDialog(ShowCreateDialog<Product> obj)
         {
             pushCurrentDialogToStack();
 
-            DisplayedDialog = new CreateProductDialogViewModel(_eventAggregator, obj);
+            DisplayedDialog = new CreateProductDialogViewModel(_eventAggregator, obj, _dbProvider.Db);
         }
 
         private void handleCreateUserDialog(ShowCreateDialog<User> obj)
         {
             pushCurrentDialogToStack();
 
-            DisplayedDialog = new CreateUserDialogViewModel(_eventAggregator, obj);
+            DisplayedDialog = new CreateUserDialogViewModel(_eventAggregator, obj, _dbProvider.Db);
         }
 
         private void handleModifyLicenseDialog(ShowModifyDialog<License> obj)
         {
             pushCurrentDialogToStack();
 
-            DisplayedDialog = new ModifyLicenseDialogViewModel(_eventAggregator, obj);
+            DisplayedDialog = new ModifyLicenseDialogViewModel(_eventAggregator, obj, _dbProvider.Db);
         }
 
         private void handleModifyProductDialog(ShowModifyDialog<Product> obj)
         {
             pushCurrentDialogToStack();
 
-            DisplayedDialog = new ModifyProductDialogViewModel(_eventAggregator, obj);
+            DisplayedDialog = new ModifyProductDialogViewModel(_eventAggregator, obj, _dbProvider.Db);
         }
 
         private void handleModifyUserDialog(ShowModifyDialog<User> obj)
         {
             pushCurrentDialogToStack();
 
-            DisplayedDialog = new ModifyUserDialogViewModel(_eventAggregator, obj);
+            DisplayedDialog = new ModifyUserDialogViewModel(_eventAggregator, obj, _dbProvider.Db);
         }
 
         private void pushCurrentDialogToStack()

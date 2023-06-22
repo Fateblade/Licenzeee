@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Fateblade.Licenzee.Db.Models;
+﻿using Fateblade.Licenzee.Db.Models;
+using Fateblade.Licenzeee.WPF.Db;
 using Fateblade.Licenzeee.WPF.Events;
 using Fateblade.Licenzeee.WPF.LookUpContracts;
 using Prism.Commands;
 using Prism.Events;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Fateblade.Licenzee.Db;
 
 namespace Fateblade.Licenzeee.WPF.Dialogs
 {
@@ -14,13 +16,13 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
         private readonly ShowCreateDialog<License> _dialogInfo;
         
 
-        public CreateLicenseDialogViewModel(IEventAggregator eventAggregator, ShowCreateDialog<License> dialogInfo) : base(eventAggregator, dialogInfo)
+        public CreateLicenseDialogViewModel(IEventAggregator eventAggregator, ShowCreateDialog<License> dialogInfo, IDb db) : base(eventAggregator, dialogInfo, db)
         {
             _dialogInfo = dialogInfo;
 
-            Products = new ObservableCollection<Product>(InMemoryDb.Instance.Products);
+            Products = new ObservableCollection<Product>(Db.Products);
 
-            Users = new ObservableCollection<User>(InMemoryDb.Instance.Users);
+            Users = new ObservableCollection<User>(Db.Users);
 
             Confirm = new DelegateCommand(createAndCloseDialog, ()=>SelectedProduct!=null&&!string.IsNullOrWhiteSpace(Key))
                 .ObservesProperty(()=>SelectedProduct)
@@ -53,7 +55,7 @@ namespace Fateblade.Licenzeee.WPF.Dialogs
                 users = Array.Empty<User>();
             }
 
-            var createdLicense = InMemoryDb.Instance.CreateLicense(Key, SelectedProduct.Id, SelectedUsageType, UsageComment, users);
+            var createdLicense = Db.CreateLicense(Key, SelectedProduct.Id, SelectedUsageType, UsageComment, users);
 
             CloseDialog();
             _dialogInfo.CompletedCallback(createdLicense);
