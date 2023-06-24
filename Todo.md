@@ -2,19 +2,15 @@
 ## Now you Zeee
 ### TODO:
 - DB
-    - erstmal in memory
-    - ideen für später
-        - sqlite
+    - potential db technology
         - azure db
 - Middleware
-    - c# code
-    - ideen für später
+    - potential middleware
         - graphql
         - rest
         - azure functions
 - UI
-    - erstmal wpf
-    - ideen für später
+    - potetial ui technologies
         - react/typescript
         - blazör
         - console
