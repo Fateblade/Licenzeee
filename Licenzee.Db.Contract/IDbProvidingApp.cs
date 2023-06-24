@@ -1,6 +1,6 @@
 ﻿namespace Fateblade.Licenzee.Db
 {
-    public interface IDbProvidingApp
+    public interface IDbProvider
     {
         IDb Db { get; }
     }

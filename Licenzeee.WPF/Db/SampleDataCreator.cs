@@ -2,7 +2,7 @@
 using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
 
-namespace Fateblade.Licenzeee.WPF;
+namespace Fateblade.Licenzeee.WPF.Db;
 
 public class SampleDataCreator
 {
@@ -18,7 +18,7 @@ public class SampleDataCreator
         var product1 = _db.CreateProduct("Magic Wizard 5000", "1.0.2", "Wizarding Community Inc.", string.Empty);
         var product2 = _db.CreateProduct("BootstrapCrusher", "0.5.1", "Crashing Software", "Works as described, crashes all the time");
         var product3 = _db.CreateProduct("Brunkeldunk", "5.1.8", "Blubberdub Wunderwurks.", "Don't ask where we got this");
-        var product4 = _db.CreateProduct("Rumpelstilzchen Name Generator", Random.Shared.Next(0,995).ToString("0.00"), "J&W Grimm Software", "Kinda random");
+        var product4 = _db.CreateProduct("Rumpelstilzchen Name Generator", Random.Shared.Next(0, 995).ToString("0.00"), "J&W Grimm Software", "Kinda random");
 
 
         var user1 = _db.CreateUser("Bob", "Robs best friend");

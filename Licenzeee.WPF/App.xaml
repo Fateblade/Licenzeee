@@ -40,6 +40,12 @@
             <DataTemplate x:Key="Licenzeee.Templates.UserConfirmationTemplate">
                 <inputs:UserConfirmationInput />
             </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.UserYesNoTemplate">
+                <inputs:UserYesNoInput />
+            </DataTemplate>
+            <DataTemplate x:Key="Licenzeee.Templates.UserTextInfoTemplate">
+                <inputs:UserTextInfo />
+            </DataTemplate>
 
             <!--Templates - Dialogs-->
             <DataTemplate x:Key="Licenzeee.Templates.CreateLicenseTemplate">
@@ -71,7 +77,9 @@
                                                 OptionsView="{StaticResource Licenzeee.Templates.OptionsViewDataTemplate}"
 
                                                 UserConfirmation="{StaticResource Licenzeee.Templates.UserConfirmationTemplate}"
-
+                                                UserYesNo="{StaticResource Licenzeee.Templates.UserYesNoTemplate}"
+                                                UserTextInfoTemplate="{StaticResource Licenzeee.Templates.UserTextInfoTemplate}"
+                                                
                                                 CreateLicenseDialog="{StaticResource Licenzeee.Templates.CreateLicenseTemplate}"
                                                 CreateProductDialog="{StaticResource Licenzeee.Templates.CreateProductTemplate}"
                                                 CreateUserDialog="{StaticResource Licenzeee.Templates.CreateUserTemplate}"

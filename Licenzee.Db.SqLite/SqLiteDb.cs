@@ -1,15 +1,14 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using Fateblade.Licenzee.Db.Models;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System.Linq;
 
 namespace Fateblade.Licenzee.Db.SqLite
 {
     public class SqLiteDb : DbContext, IDb
     {
-        private readonly string _dbFileLocation;
-        private readonly string _dbFileName;
+        private readonly string _completeDbFilePath;
 
         public IQueryable<License> Licenses => LicenseSet.AsQueryable();
         public IQueryable<Product> Products => ProductSet.AsQueryable();
@@ -21,22 +20,23 @@ namespace Fateblade.Licenzee.Db.SqLite
         public DbSet<User> UserSet { get; set; }
         public DbSet<XLicenseUser> XLicenseUserSet { get; set; }
 
-        public SqLiteDb(string dbFileLocation, string dbFileName)
+        public SqLiteDb(string completeDbFilePath)
         {
-            _dbFileLocation = dbFileLocation;
-            _dbFileName = dbFileName;
+            _completeDbFilePath = completeDbFilePath;
+            
+            // ReSharper disable once VirtualMemberCallInConstructor
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!Directory.Exists(_dbFileLocation))
+            var directoryPath = Directory.GetParent(_completeDbFilePath)?.FullName ?? throw new ArgumentException($"'{_completeDbFilePath}' is not in a valid path");
+            if (!Directory.Exists(directoryPath))
             {
-                Directory.CreateDirectory(_dbFileLocation);
+                Directory.CreateDirectory(directoryPath);
             }
 
-            var fullPath = Path.Combine(_dbFileLocation, _dbFileName);
-
-            optionsBuilder.UseSqlite($"Data Source={fullPath};Version=3;");
+            optionsBuilder.UseSqlite($"Data Source={_completeDbFilePath};");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,6 +54,7 @@ namespace Fateblade.Licenzee.Db.SqLite
 
             modelBuilder.Entity<XLicenseUser>().Property(t => t.LicenseId).IsRequired();
             modelBuilder.Entity<XLicenseUser>().Property(t => t.UserId).IsRequired();
+            modelBuilder.Entity<XLicenseUser>().HasKey(t=> new { t.LicenseId, t.UserId});
         }
 
         public License CreateLicense(string key, int productId, UsageType usageType, string usageComment, params User[] licenseUsers)
@@ -80,7 +81,6 @@ namespace Fateblade.Licenzee.Db.SqLite
                     {
                         XLicenseUserSet.Add(new XLicenseUser(createdLicenseEntry.Entity.Id, t.Id));
                     }
-
                     break;
                 }
             }

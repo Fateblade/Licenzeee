@@ -3,9 +3,77 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:Background="Wheat">
     <Grid>
-            <Button Content="Options"></Button>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="4,4,0,0"
+                   Text="Used Database:"
+                   VerticalAlignment="Center"/>
+
+        <RadioButton Grid.Row="0" Grid.Column="1" Margin="4,4,0,0"
+                     GroupName="Database" Content="InMemory Only (Volatile)" 
+                     IsChecked="{Binding Path=UseInMemoryDb}"/>
+
+
+        <RadioButton Grid.Row="1" Grid.Column="1" Margin="4,8,0,0"
+                     GroupName="Database" Content="SqLite" 
+                     IsChecked="{Binding Path=UseSqLiteDb}"
+                     x:Name="rdbDatabaseSqLite"/>
+
+
+        <Grid Grid.Row="2" Grid.Column="1" Margin="8,4,0,0"
+              IsEnabled="{Binding Path=IsChecked, ElementName=rdbDatabaseSqLite}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       VerticalAlignment="Center"
+                       Text="Database file:"/>
+
+            <TextBox Grid.Row="0" Grid.Column="1" Margin="4,0,0,0"
+                     Text="{Binding Path=SqLiteDbPath}"
+                     IsReadOnly="True"/>
+
+            <Button Grid.Row="0" Grid.Column="2" Margin="4,0,4,0" 
+                    Content="..."
+                    Width="50"
+                    Command="{Binding Path=SelectDbPath}"/>
+
+        </Grid>
+
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Margin="4,8,0,0"
+                   Text="Import:"
+                   VerticalAlignment="Center"/>
+
+        <Button Grid.Row="3" Grid.Column="1" Margin="4,8,0,0"
+                Content="Sample Data" Width="150"
+                HorizontalAlignment="Left"
+                Command="{Binding Path=ImportSampleData}" />
+
+
+        <Button Grid.Row="5" Grid.Column="1" Margin="0,4,4,4"
+                Width="100" HorizontalAlignment="Right"
+                Content="Save Settings"
+                Command="{Binding Path=SaveSettings}"/>
     </Grid>
 </UserControl>

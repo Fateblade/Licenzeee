@@ -16,6 +16,8 @@ namespace Fateblade.Licenzeee.WPF
 
         //inputs
         public DataTemplate? UserConfirmation { get; set; }
+        public DataTemplate? UserYesNo { get; set; }
+        public DataTemplate? UserTextInfoTemplate { get; set; }
 
         //dialogs
         public DataTemplate? CreateLicenseDialog { get; set; }
@@ -24,6 +26,7 @@ namespace Fateblade.Licenzeee.WPF
         public DataTemplate? ModifyLicenseDialog { get; set; }
         public DataTemplate? ModifyProductDialog { get; set; }
         public DataTemplate? ModifyUserDialog { get; set; }
+        
 
         public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
@@ -37,6 +40,8 @@ namespace Fateblade.Licenzeee.WPF
                 
                 //inputs
                 UserConfirmationInputViewModel => UserConfirmation,
+                UserYesNoInputViewModel => UserYesNo,
+                UserTextInfoViewModel => UserTextInfoTemplate,
                 
                 //dialogs
                 CreateLicenseDialogViewModel => CreateLicenseDialog,

@@ -21,6 +21,31 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Licenzee.Db.Contract\Licenzee.Db.Contract.csproj" />
+    <ProjectReference Include="..\Licenzee.Db.SqLite\Licenzee.Db.SqLite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\DatabaseSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DatabaseSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\DatabaseSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>DatabaseSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

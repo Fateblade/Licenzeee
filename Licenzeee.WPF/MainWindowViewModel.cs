@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Fateblade.Licenzee.Db.Models;
 using Fateblade.Licenzeee.WPF.Dialogs;
 using Fateblade.Licenzee.Db;
+using Fateblade.Licenzeee.WPF.Db;
 
 namespace Fateblade.Licenzeee.WPF
 {
@@ -15,7 +16,8 @@ namespace Fateblade.Licenzeee.WPF
     {
         private readonly Stack<BindableBaseWithHeader> _dialogStack;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IDbProvidingApp _dbProvider;
+        private readonly IDbProvider _dbProvider;
+        private readonly DbImportHandler _dbImportHandler;
 
 
         private BindableBase? _displayedContent;
@@ -45,18 +47,21 @@ namespace Fateblade.Licenzeee.WPF
         public DelegateCommand SwitchToOptions { get; }
 
 
-        public MainWindowViewModel(IEventAggregator eventAggregator, IDbProvidingApp dbProvider)
+        public MainWindowViewModel(IEventAggregator eventAggregator, IDbProvider dbProvider)
         {
             _eventAggregator = eventAggregator;
             _dbProvider = dbProvider;
             _dialogStack = new Stack<BindableBaseWithHeader>();
+            _dbImportHandler = new DbImportHandler(_eventAggregator, dbProvider);
 
             SwitchToLicenses = new DelegateCommand(() => DisplayedContent = new LicensesViewModel(_eventAggregator, _dbProvider.Db));
             SwitchToProducts = new DelegateCommand(() => DisplayedContent = new ProductsViewModel(_eventAggregator, _dbProvider.Db));
             SwitchToUsers = new DelegateCommand(() => DisplayedContent = new UsersViewModel(_eventAggregator, _dbProvider.Db));
-            SwitchToOptions = new DelegateCommand(() => DisplayedContent = new OptionsViewModel());
+            SwitchToOptions = new DelegateCommand(() => DisplayedContent = new OptionsViewModel(_eventAggregator));
 
             _eventAggregator.GetEvent<PubSubEvent<UserConfirmationRequest>>().Subscribe(handleUserConfirmationRequest);
+            _eventAggregator.GetEvent<PubSubEvent<UserYesNoRequest>>().Subscribe(handleYesNoRequest);
+            _eventAggregator.GetEvent<PubSubEvent<UserInfoRequest>>().Subscribe(handleUserInfoRequest);
             _eventAggregator.GetEvent<PubSubEvent<CloseCurrentInputRequest>>().Subscribe(handleCLoseCurrentInputRequest);
             _eventAggregator.GetEvent<PubSubEvent<CloseCurrentDialogRequest>>().Subscribe(handleCloseCurrentDialogRequest);
             _eventAggregator.GetEvent<PubSubEvent<ShowCreateDialog<License>>>().Subscribe(handleShowCreateLicenseDialog);
@@ -71,6 +76,16 @@ namespace Fateblade.Licenzeee.WPF
         private void handleUserConfirmationRequest(UserConfirmationRequest obj)
         {
             DisplayedInputRequest = new UserConfirmationInputViewModel(obj, _eventAggregator);
+        }
+
+        private void handleYesNoRequest(UserYesNoRequest obj)
+        {
+            DisplayedInputRequest = new UserYesNoInputViewModel(obj, _eventAggregator);
+        }
+
+        private void handleUserInfoRequest(UserInfoRequest obj)
+        {
+            DisplayedInputRequest = new UserTextInfoViewModel(obj, _eventAggregator);
         }
 
         private void handleCLoseCurrentInputRequest(CloseCurrentInputRequest obj)

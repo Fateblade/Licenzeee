@@ -23,7 +23,7 @@ public class InMemoryDb : IDb
     public License CreateLicense(string key, int productId, UsageType usageType, string usageComment,
         params User[] licenseUsers)
     {
-        var id = Licenses.Max(t => t.Id) + 1;
+        var id = !Licenses.Any() ? 1 : Licenses.Max(t => t.Id) + 1;
 
         var license = new License { Id = id, Key = key, ProductId = productId, UsageType = usageType };
 
@@ -36,21 +36,22 @@ public class InMemoryDb : IDb
                 license.LicenseUserId = licenseUsers[0].Id;
                 break;
             default:
+            {
+                foreach (var t in licenseUsers)
                 {
-                    foreach (var t in licenseUsers)
-                    {
-                        _xLicenseUsers.Add(new XLicenseUser(id, t.Id));
-                    }
-
-                    break;
+                    _xLicenseUsers.Add(new XLicenseUser(id, t.Id));
                 }
+
+                break;
+            }
         }
 
         _licenses.Add(license);
         return license;
     }
 
-    public License UpdateLicense(int licenseId, string key, int productId, UsageType usageType, string usageComment, User[] users)
+    public License UpdateLicense(int licenseId, string key, int productId, UsageType usageType, string usageComment,
+        User[] users)
     {
         var license = Licenses.First(t => t.Id == licenseId);
         _xLicenseUsers.RemoveAll(t => t.LicenseId == licenseId);
@@ -67,14 +68,14 @@ public class InMemoryDb : IDb
                 license.LicenseUserId = users.Length > 0 ? users[0].Id : 0;
                 break;
             default:
+            {
+                foreach (var t in users)
                 {
-                    foreach (var t in users)
-                    {
-                        _xLicenseUsers.Add(new XLicenseUser(licenseId, t.Id));
-                    }
-
-                    break;
+                    _xLicenseUsers.Add(new XLicenseUser(licenseId, t.Id));
                 }
+
+                break;
+            }
         }
 
         return license;
@@ -100,7 +101,7 @@ public class InMemoryDb : IDb
 
     public Product CreateProduct(string name, string version, string licenser, string comment)
     {
-        var id = Products.Max(t => t.Id) + 1;
+        var id = !Products.Any() ? 1 : Products.Max(t => t.Id) + 1;
 
         var product = new Product { Id = id, Name = name, Version = version, Comment = comment, Licenser = licenser };
         _products.Add(product);
@@ -137,7 +138,7 @@ public class InMemoryDb : IDb
 
     public User CreateUser(string name, string comment)
     {
-        var id = Users.Max(t => t.Id) + 1;
+        var id = !Users.Any() ? 1 : Users.Max(t => t.Id) + 1;
 
         var user = new User { Id = id, Comment = comment };
         _users.Add(user);
@@ -171,5 +172,4 @@ public class InMemoryDb : IDb
 
         _xLicenseUsers.RemoveAll(t => t.UserId == userId);
     }
-
 }

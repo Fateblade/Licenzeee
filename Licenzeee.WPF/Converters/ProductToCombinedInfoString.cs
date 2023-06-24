@@ -1,5 +1,7 @@
 ﻿using Fateblade.Licenzee.Db;
 using Fateblade.Licenzee.Db.Models;
+using Fateblade.Licenzeee.WPF.Db;
+using Prism.Ioc;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -33,6 +35,18 @@ namespace Fateblade.Licenzeee.WPF.Converters
 
     internal class LicensedProductIdToCombinedInfoString : IValueConverter
     {
+        private readonly IDbProvider _dbProvider;
+
+        public LicensedProductIdToCombinedInfoString()
+        {
+            if (Application.Current is not IContainerApp)
+            {
+                throw new ArgumentException($"App does not implement '{nameof(IContainerApp)}'");
+            }
+
+            _dbProvider = (Application.Current as IContainerApp)!.Container.Resolve<IDbProvider>();
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is not int licensedProductId)
@@ -40,13 +54,7 @@ namespace Fateblade.Licenzeee.WPF.Converters
                 return string.Empty;
             }
 
-            if (Application.Current is not IDbProvidingApp)
-            {
-                throw new ArgumentException($"App does not implement '{nameof(IDbProvidingApp)}'");
-            }
-            var db = (Application.Current as IDbProvidingApp)!.Db;
-
-            return LicensedProductToCombinedInfoString.GetCombinedInfoString(db.Products.First(t=>t.Id==licensedProductId));
+            return LicensedProductToCombinedInfoString.GetCombinedInfoString(_dbProvider.Db.Products.First(t=>t.Id==licensedProductId));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

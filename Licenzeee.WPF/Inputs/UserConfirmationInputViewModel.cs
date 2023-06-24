@@ -10,7 +10,7 @@ namespace Fateblade.Licenzeee.WPF.Inputs
         private readonly IEventAggregator _eventAggregator;
         private readonly Action<bool> _userInformationCallback;
 
-        private string _question;
+        private string _question = string.Empty;
         public string Question
         {
             get => _question;
