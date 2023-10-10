@@ -5,9 +5,11 @@ namespace Fateblade.Licenzeee.WPF.Events
     enum KnownDbTypes
     {
         InMemoryOnly,
-        SqLite
+        SqLite,
+        MySql
     }
-    internal class ChangeDbRequest
+
+    class ChangeDbRequest
     {
         public KnownDbTypes NewDbToUse { get; }
         public bool MigrateExistingData { get; }

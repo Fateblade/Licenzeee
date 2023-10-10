@@ -3,6 +3,7 @@ using Fateblade.Licenzee.Db.SqLite;
 using Fateblade.Licenzeee.WPF.Events;
 using Prism.Events;
 using System;
+using Fateblade.Licenzeee.MySql;
 
 namespace Fateblade.Licenzeee.WPF.Db
 {
@@ -44,6 +45,13 @@ namespace Fateblade.Licenzeee.WPF.Db
                     break;
                 case KnownDbTypes.SqLite:
                     newDbToUse = new SqLiteDb(Properties.DatabaseSettings.Default.SqLiteDbPath);
+                    break;
+                case KnownDbTypes.MySql:
+                    newDbToUse = new MySqlDb(
+                        Properties.DatabaseSettings.Default.MySqlServerName,
+                        Properties.DatabaseSettings.Default.MySqlDatabaseName,
+                        Properties.DatabaseSettings.Default.MySqlUserId,
+                        "");//TODO: Request Password from user
                     break;
                 default: throw new ArgumentException($"Unknown db type '{obj.NewDbToUse}'");
             }

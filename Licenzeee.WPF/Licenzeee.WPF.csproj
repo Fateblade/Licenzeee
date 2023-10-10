@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Licenzee.Db.Contract\Licenzee.Db.Contract.csproj" />
     <ProjectReference Include="..\Licenzee.Db.SqLite\Licenzee.Db.SqLite.csproj" />
+    <ProjectReference Include="..\Licenzeee.MySql\Licenzeee.MySql.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -58,5 +58,53 @@ namespace Fateblade.Licenzeee.WPF.Properties {
                 this["SqLiteDbPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseMySqlDb {
+            get {
+                return ((bool)(this["UseMySqlDb"]));
+            }
+            set {
+                this["UseMySqlDb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MySqlServerName {
+            get {
+                return ((string)(this["MySqlServerName"]));
+            }
+            set {
+                this["MySqlServerName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MySqlUserId {
+            get {
+                return ((string)(this["MySqlUserId"]));
+            }
+            set {
+                this["MySqlUserId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MySqlDatabaseName {
+            get {
+                return ((string)(this["MySqlDatabaseName"]));
+            }
+            set {
+                this["MySqlDatabaseName"] = value;
+            }
+        }
     }
 }

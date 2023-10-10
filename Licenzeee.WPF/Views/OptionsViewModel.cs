@@ -15,11 +15,19 @@ namespace Fateblade.Licenzeee.WPF.Views
         private readonly IEventAggregator _eventAggregator;
         private readonly string _defaultPath;
 
-        private string _dbPath = string.Empty;
-        public string SqLiteDbPath
+
+        private bool _currentlySaving;
+        public bool CurrentlySaving
         {
-            get => _dbPath;
-            set => SetProperty(ref _dbPath, value);
+            get => _currentlySaving;
+            set => SetProperty(ref _currentlySaving, value);
+        }
+
+        private bool _currentlyImporting;
+        public bool CurrentlyImporting
+        {
+            get => _currentlyImporting;
+            set => SetProperty(ref _currentlyImporting, value);
         }
 
         private bool _useInMemoryDb;
@@ -36,18 +44,39 @@ namespace Fateblade.Licenzeee.WPF.Views
             set => SetProperty(ref _useSqLiteDb, value);
         }
 
-        private bool _currentlySaving;
-        public bool CurrentlySaving
+        private string _dbPath = string.Empty;
+        public string SqLiteDbPath
         {
-            get => _currentlySaving;
-            set => SetProperty(ref _currentlySaving, value);
+            get => _dbPath;
+            set => SetProperty(ref _dbPath, value);
         }
 
-        private bool _currentlyImporting;
-        public bool CurrentlyImporting
+        private bool _useMySqlDb;
+        public bool UseMySqlDb
         {
-            get => _currentlyImporting;
-            set => SetProperty(ref _currentlyImporting, value);
+            get => _useMySqlDb;
+            set => SetProperty(ref _useMySqlDb, value);
+        }
+
+        private string _mySqlServerName = string.Empty;
+        public string MySqlServerName
+        {
+            get => _mySqlServerName;
+            set => SetProperty(ref _mySqlServerName, value);
+        }
+
+        private string _mySqlDatabaseName = string.Empty;
+        public string MySqlDatabaseName
+        {
+            get => _mySqlDatabaseName;
+            set => SetProperty(ref _mySqlDatabaseName, value);
+        }
+
+        private string _mySqlUserId = string.Empty;
+        public string MySqlUserId
+        {
+            get => _mySqlUserId;
+            set => SetProperty(ref _mySqlUserId, value);
         }
 
         public DelegateCommand SelectDbPath { get; }
@@ -66,15 +95,25 @@ namespace Fateblade.Licenzeee.WPF.Views
                 .ObservesProperty(() => UseSqLiteDb)
                 .ObservesProperty(() => SqLiteDbPath)
                 .ObservesProperty(() => CurrentlySaving)
-                .ObservesProperty(() => CurrentlyImporting);
+                .ObservesProperty(() => CurrentlyImporting)
+                .ObservesProperty(() => UseMySqlDb)
+                .ObservesProperty(() => MySqlServerName)
+                .ObservesProperty(() => MySqlDatabaseName)
+                .ObservesProperty(() => MySqlUserId);
             ImportSampleData = new DelegateCommand(importSampleData, ()=>!CurrentlySaving)
                 .ObservesProperty(()=> CurrentlySaving);
 
             UseInMemoryDb = DatabaseSettings.Default.UseInMemoryDb;
+            
             UseSqLiteDb = DatabaseSettings.Default.UseSqLiteDb;
             SqLiteDbPath = string.IsNullOrWhiteSpace(DatabaseSettings.Default.SqLiteDbPath)
                 ? _defaultPath
                 : DatabaseSettings.Default.SqLiteDbPath;
+            
+            UseMySqlDb = DatabaseSettings.Default.UseMySqlDb;
+            MySqlServerName = DatabaseSettings.Default.MySqlServerName;
+            MySqlDatabaseName = DatabaseSettings.Default.MySqlDatabaseName;
+            MySqlUserId = DatabaseSettings.Default.MySqlUserId;
         }
 
 
@@ -106,7 +145,12 @@ namespace Fateblade.Licenzeee.WPF.Views
         {
             return DatabaseSettings.Default.UseInMemoryDb != UseInMemoryDb
                    || DatabaseSettings.Default.UseSqLiteDb != UseSqLiteDb
-                   || (UseSqLiteDb && !DatabaseSettings.Default.SqLiteDbPath.ToLower().Equals(SqLiteDbPath?.ToLower()));
+                   || (UseSqLiteDb && !DatabaseSettings.Default.SqLiteDbPath.ToLower().Equals(SqLiteDbPath.ToLower()))
+                   || DatabaseSettings.Default.UseMySqlDb != UseMySqlDb
+                   || (UseMySqlDb
+                       && (!DatabaseSettings.Default.MySqlServerName.ToLower().Equals(MySqlServerName.ToLower())
+                           || !DatabaseSettings.Default.MySqlDatabaseName.ToLower().Equals(MySqlDatabaseName.ToLower())
+                           || !DatabaseSettings.Default.MySqlUserId.ToLower().Equals(MySqlUserId.ToLower())));
         }
 
         private void applySettings()
@@ -132,15 +176,26 @@ namespace Fateblade.Licenzeee.WPF.Views
         private void saveSettings()
         {
             DatabaseSettings.Default.UseInMemoryDb = UseInMemoryDb;
+
             DatabaseSettings.Default.UseSqLiteDb = UseSqLiteDb;
             DatabaseSettings.Default.SqLiteDbPath = SqLiteDbPath;
+
+            DatabaseSettings.Default.UseMySqlDb = UseMySqlDb;
+            DatabaseSettings.Default.MySqlServerName = MySqlServerName;
+            DatabaseSettings.Default.MySqlDatabaseName = MySqlDatabaseName;
+            DatabaseSettings.Default.MySqlUserId = MySqlUserId;
+
             DatabaseSettings.Default.Save();
         }
 
         private void applySettings_MigrateDataInputRequest(bool migrateData)
         {
             _eventAggregator.GetEvent<PubSubEvent<NewDataImported>>().Subscribe(applySettings_NewDataImported);
-            _eventAggregator.GetEvent<PubSubEvent<ChangeDbRequest>>().Publish(new ChangeDbRequest(UseInMemoryDb ? KnownDbTypes.InMemoryOnly : KnownDbTypes.SqLite, migrateData));
+            _eventAggregator.GetEvent<PubSubEvent<ChangeDbRequest>>().Publish(
+                new ChangeDbRequest(
+                    UseInMemoryDb ? KnownDbTypes.InMemoryOnly
+                    : UseSqLiteDb ? KnownDbTypes.SqLite
+                    : KnownDbTypes.MySql, migrateData));
         }
 
         private void applySettings_NewDataImported(NewDataImported obj)
