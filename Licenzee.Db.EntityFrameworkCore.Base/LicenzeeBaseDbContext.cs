@@ -15,16 +15,7 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
         public DbSet<User> UserSet { get; set; }
         public DbSet<XLicenseUser> XLicenseUserSet { get; set; }
 
-
-        protected LicenzeeBaseDbContext(bool ensureCreated = true)
-        {
-            if (ensureCreated)
-            {// ReSharper disable once VirtualMemberCallInConstructor
-                Database.EnsureCreated();
-            }
-        }
-
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<License>().Property(t => t.Id).IsRequired();
@@ -47,6 +38,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
         public License CreateLicense(string key, int productId, UsageType usageType,
             string usageComment, params User[] licenseUsers)
         {
+            Database.EnsureCreated();
+
             var createdLicenseEntry = LicenseSet.Add(new License
             {
                 Key = key,
@@ -82,6 +75,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
         public License UpdateLicense(int licenseId, string key, int productId, UsageType usageType, string usageComment,
             User[] users)
         {
+            Database.EnsureCreated();
+
             var license = Licenses.First(t => t.Id == licenseId);
             XLicenseUserSet.RemoveRange(XLicenseUsers.Where(t => t.LicenseId == licenseId));
 
@@ -114,6 +109,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public void DeleteLicense(int licenseId)
         {
+            Database.EnsureCreated();
+
             LicenseSet.Remove(Licenses.First(t => t.Id == licenseId));
             XLicenseUserSet.RemoveRange(XLicenseUsers.Where(t => t.LicenseId == licenseId));
 
@@ -122,6 +119,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public User[] GetUsersOfLicense(int licenseId)
         {
+            Database.EnsureCreated();
+
             return XLicenseUsers.Where(t => t.LicenseId == licenseId)
                 .Select(x => Users.First(u => u.Id == x.UserId))
                 .ToArray();
@@ -129,6 +128,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public Product CreateProduct(string name, string version, string licenser, string comment)
         {
+            Database.EnsureCreated();
+
             var createdProductEntry = ProductSet.Add(new Product
             {
                 Name = name,
@@ -143,6 +144,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public Product UpdateProduct(int toModifyId, string name, string version, string licenser, string comment)
         {
+            Database.EnsureCreated();
+
             var product = Products.First(t => t.Id == toModifyId);
 
             product.Name = name;
@@ -158,6 +161,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public void DeleteProduct(int licensedProductId)
         {
+            Database.EnsureCreated();
+
             ProductSet.Remove(Products.First(t => t.Id == licensedProductId));
             LicenseSet.RemoveRange(Licenses.Where(t => t.ProductId == licensedProductId));
 
@@ -166,6 +171,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public User CreateUser(string name, string comment)
         {
+            Database.EnsureCreated();
+
             var createdUser = UserSet.Add(new User { Comment = comment, Name = name });
 
             SaveChanges();
@@ -174,6 +181,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public User UpdateUser(int toModifyId, string name, string comment)
         {
+            Database.EnsureCreated();
+
             var user = Users.First(t => t.Id == toModifyId);
 
             user.Name = name;
@@ -187,6 +196,8 @@ namespace Licenzee.Db.EntityFrameworkCore.Base
 
         public void DeleteUser(int userId)
         {
+            Database.EnsureCreated();
+
             UserSet.Remove(Users.First(t => t.Id == userId));
             XLicenseUserSet.RemoveRange(XLicenseUsers.Where(t => t.UserId == userId));
 
